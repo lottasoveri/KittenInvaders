@@ -1,6 +1,8 @@
 import pygame
 from random import randrange, choice
 
+# FUNCTIONS:
+
 def enemy_movement(enemy_list: list):
     if enemy_list:
         for enemy_rect in enemy_list:
@@ -30,14 +32,23 @@ def bolt_collision(bolts, enemies):
         for enemy_rect in enemies:
             for bolt_rect in bolts:
                 if enemy_rect.colliderect(bolt_rect):
-                    enemy_rect.y = screen.get_height() +100
-                    bolt_rect.y = -20
+                    enemy_rect.y = screen.get_height() +200
+                    bolt_rect.y = -300
                     game_score += 100
+                    
+def ground_collision(ground, enemies):
+    if enemies:
+        for enemy_rect in enemies:
+            if enemy_rect.colliderect(ground):
+                print(game_score)
+                exit()
 
 def display_score(score):
     score_surf = font.render(f"Score: {score}", False, (0, 0, 25))
     score_rect = score_surf.get_rect(center = (screen.get_width()/2, screen.get_height()-25))
     screen.blit(score_surf, score_rect)
+    
+# GAME ELEMENTS:
     
 pygame.init()
 
@@ -60,14 +71,16 @@ while star_counter < 200:
     star_coords.append(star)
     star_counter += 1
     
-# Game surfaces:
+# Space / starfield background surface:
 starfield = pygame.Surface((screen.get_width(), screen.get_height()-50))
 starfield.fill((0, 0, 25))
 for star in star_coords:
     pygame.draw.circle(starfield, (204, 229, 255), (star["star_x"], star["star_y"]), star["star_size"])
-    
-ground = pygame.Surface((screen.get_width(), 50))
-ground.fill((64, 64, 64))
+
+# Ground surface:    
+ground_surf = pygame.Surface((screen.get_width(), 50))
+ground_surf.fill((64, 64, 64))
+ground_rect = ground_surf.get_rect(bottomleft = (0, screen.get_height()))
 
 # Player:  
 player_surf = pygame.image.load("images/cannon.png").convert_alpha()
@@ -75,16 +88,14 @@ player_rect = player_surf.get_rect(midbottom = (screen.get_width()/2, screen.get
 
 # Cannon bolts:
 bolt_surf = pygame.image.load("images/piu.png").convert_alpha()
-
 bolt_rect_list = []
 
 # Enemies:
 kitty1_surf = pygame.image.load("images/kitty1.png").convert_alpha()
 kitty2_surf = pygame.image.load("images/kitty2.png").convert_alpha()
-
 enemy_rect_list = []
 
-# Game control initiation:
+# Game controls:
 right = False
 left = False
 
@@ -98,25 +109,30 @@ while True:
     
     for event in pygame.event.get():
         
+        # Close game:
         if event.type == pygame.QUIT:
             exit()
         
         if event.type == pygame.KEYDOWN:
+            # Move player:
             if event.key == pygame.K_LEFT:
                 left = True
             if event.key == pygame.K_RIGHT:
                 right = True
+            # Shoot bolts:
             if event.key == pygame.K_SPACE:
                 bolt_rect_list.append(bolt_surf.get_rect(midbottom = player_rect.midtop))
-            
+        
+        # Stop player movement:    
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 left = False
             if event.key == pygame.K_RIGHT:
                 right = False
-                
+        
+        # Spawning enemies;        
         if event.type == enemy_timer:
-            enemy_rect_list.append(choice([kitty1_surf, kitty2_surf]).get_rect(midbottom = (randrange(20, screen.get_width()-20), -10)))       
+            enemy_rect_list.append(choice([kitty1_surf, kitty2_surf]).get_rect(midbottom = (randrange(20, screen.get_width()-20), 0)))       
                 
     if right:
         if player_rect.right <= screen.get_width():
@@ -136,12 +152,13 @@ while True:
     
     # Collisions
     bolt_collision(bolt_rect_list, enemy_rect_list)
+    ground_collision(ground_rect, enemy_rect_list)
     
     # Player:    
     screen.blit(player_surf, player_rect)
     
     # Ground:
-    screen.blit(ground, (0, screen.get_height()-50))    
+    screen.blit(ground_surf, ground_rect)    
  
     # Game score:
     display_score(game_score)
