@@ -25,15 +25,17 @@ def firing_bolts(bolt_list: list):
         return []
         
 def bolt_collision(bolts, enemies):
+    global game_score
     if enemies:
         for enemy_rect in enemies:
             for bolt_rect in bolts:
                 if enemy_rect.colliderect(bolt_rect):
                     enemy_rect.y = screen.get_height() +100
                     bolt_rect.y = -20
+                    game_score += 100
 
-def keeping_score():
-    score_surf = font.render(f"Score: {game_score}", False, (0, 0, 25))
+def display_score(score):
+    score_surf = font.render(f"Score: {score}", False, (0, 0, 25))
     score_rect = score_surf.get_rect(center = (screen.get_width()/2, screen.get_height()-25))
     screen.blit(score_surf, score_rect)
     
@@ -43,6 +45,8 @@ screen = pygame.display.set_mode((1280, 960))
 pygame.display.set_caption("Kitten Invaders")
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 30)
+
+# Game score:
 game_score = 0
 
 # Starfield generator:
@@ -112,7 +116,7 @@ while True:
                 right = False
                 
         if event.type == enemy_timer:
-            enemy_rect_list.append(choice([kitty1_surf, kitty2_surf]).get_rect(midbottom = (randrange(20, screen.get_width()-20), -10)))
+            enemy_rect_list.append(choice([kitty1_surf, kitty2_surf]).get_rect(midbottom = (randrange(20, screen.get_width()-20), -10)))       
                 
     if right:
         if player_rect.right <= screen.get_width():
@@ -132,13 +136,15 @@ while True:
     
     # Collisions
     bolt_collision(bolt_rect_list, enemy_rect_list)
-        
+    
+    # Player:    
     screen.blit(player_surf, player_rect)
     
+    # Ground:
     screen.blit(ground, (0, screen.get_height()-50))    
  
     # Game score:
-    keeping_score()
+    display_score(game_score)
     
     pygame.display.update()
     clock.tick(60)
