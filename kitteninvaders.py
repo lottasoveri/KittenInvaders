@@ -24,10 +24,12 @@ def enemy_movement(enemy_list: list):
     if enemy_list:
         for enemy_rect in enemy_list:
             enemy_rect.y += 1
-            if enemy_rect.height < 100:
+            if enemy_rect.height < 95:
                 screen.blit(kitty2_surf, enemy_rect)
+            elif enemy_rect.height < 100:
+                screen.blit(kitty4_surf, enemy_rect)
             else:
-                screen.blit(kitty1_surf, enemy_rect)    
+                screen.blit(kitty3_surf, enemy_rect)
         enemy_list = [enemy for enemy in enemy_list if enemy.y < (screen.get_height() + 100)]    
         return enemy_list
     else:
@@ -37,8 +39,11 @@ def bolt_movement(bolt_list: list):
     if bolt_list:
         for bolt_rect in bolt_list:
             bolt_rect.y -= 5
-            screen.blit(bolt_surf, bolt_rect)
-        bolt_list = [bolt for bolt in bolt_list if bolt.y > -10]    
+            if bolt_rect.height < 30:
+                screen.blit(bolt1_surf, bolt_rect)
+            else:
+                screen.blit(bolt2_surf, bolt_rect)
+        bolt_list = [bolt for bolt in bolt_list if bolt.y > 0]    
         return bolt_list
     else:
         return []
@@ -74,10 +79,9 @@ screen = pygame.display.set_mode((1280, 800))
 pygame.display.set_caption("Kitten Invaders")
 clock = pygame.time.Clock()
 
-font_title = pygame.font.Font("fonts\PixeloidSansBold-PKnYd.ttf", 50)
-font_regular = pygame.font.Font("fonts\PixeloidSans-mLxMm.ttf", 30)
+font_title = pygame.font.Font("fonts/PixeloidSansBold-PKnYd.ttf", 50)
+font_regular = pygame.font.Font("fonts/PixeloidSans-mLxMm.ttf", 30)
 font_score = pygame.font.Font("fonts/PixeloidMono-d94EV.ttf", 20)
-# font_score = pygame.font.Font("fonts\PixeloidSans-mLxMm.ttf", 20)
 
 game_active = False     # Switch between start screen and game
 game_started = False    # True after first game started, affects start screen title
@@ -89,7 +93,7 @@ title_rect = title_surf.get_rect(midbottom = (screen.get_width()/2, screen.get_h
 game_over_surf = font_title.render("Game over!", False, (156, 156, 156))
 game_over_rect = game_over_surf.get_rect(midbottom = (screen.get_width()/2, screen.get_height()/3))
 
-info_surf = font_regular.render("Push space to play", False, (156, 156, 156))
+info_surf = font_regular.render("Push Enter to play", False, (156, 156, 156))
 info_rect = info_surf.get_rect(midtop = (screen.get_width()/2, screen.get_height()/3*2))
 
 # Game score:
@@ -110,13 +114,17 @@ player_surf = pygame.image.load("images/cannon.png").convert_alpha()
 player_rect = player_surf.get_rect(midbottom = (screen.get_width()/2, screen.get_height()-50))
 
 # Cannon bolts:
-bolt_surf = pygame.image.load("images/piu.png").convert_alpha()
+bolt1_surf = pygame.image.load("images/bolt1.png").convert_alpha()
+bolt2_surf = pygame.image.load("images/bolt2.png").convert_alpha()
+bolt_surf_list = [bolt1_surf, bolt2_surf]
 bolt_rect_list = []
 
 # Enemies:
-kitty1_surf = pygame.image.load("images/kitty1.png").convert_alpha()
+# kitty1_surf = pygame.image.load("images/kitty1.png").convert_alpha()
 kitty2_surf = pygame.image.load("images/kitty2.png").convert_alpha()
-enemy_surf_list = [kitty1_surf, kitty2_surf]
+kitty3_surf = pygame.image.load("images/kitty3.png").convert_alpha()
+kitty4_surf = pygame.image.load("images/kitty4.png").convert_alpha()
+enemy_surf_list = [kitty2_surf, kitty3_surf, kitty4_surf]
 enemy_rect_list = []
 
 # Game controls:
@@ -130,8 +138,6 @@ pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
 
 spawn_increase_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(spawn_increase_timer, 5000)
-
-
 
 # MAIN GAME LOOP:
 
@@ -155,7 +161,11 @@ while True:
                     right = True
                 # Shoot bolts:
                 if event.key == pygame.K_SPACE:
-                    bolt_rect_list.append(bolt_surf.get_rect(midbottom = player_rect.midtop))
+                    bolt_rect_list.append(choice(bolt_surf_list).get_rect(midbottom = player_rect.midtop))
+                    game_score -= 5
+                # Quit to start screen:
+                if event.key == pygame.K_q:
+                    game_active = False
             
             # Stop player movement:    
             if event.type == pygame.KEYUP:
@@ -166,7 +176,7 @@ while True:
             
             # Spawning enemies;        
             if event.type == enemy_timer:
-                enemy_rect_list.append(choice(enemy_surf_list).get_rect(midbottom = (randrange(20, screen.get_width()-20), 0)))       
+                enemy_rect_list.append(choice(enemy_surf_list).get_rect(midbottom = (randrange(60, screen.get_width()-60), 0)))       
                 
             if event.type == spawn_increase_timer:
                 if enemy_spawn_rate <= 100:
@@ -180,7 +190,7 @@ while True:
         # Start screen events:
         
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     game_score = 0
                     enemy_rect_list = []
                     bolt_rect_list = []
@@ -188,6 +198,13 @@ while True:
                     enemy_spawn_rate = 2000
                     game_active = True
                     game_started = True
+                    
+            # Stop player movement, in case it got stuck when game ended:    
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    left = False
+                if event.key == pygame.K_RIGHT:
+                    right = False
    
     if game_active:
         
