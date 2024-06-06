@@ -123,9 +123,15 @@ enemy_rect_list = []
 right = False
 left = False
 
-# Timer:
+# Timers:
 enemy_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(enemy_timer, 2000)
+enemy_spawn_rate = 2000
+pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
+
+spawn_increase_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(spawn_increase_timer, 5000)
+
+
 
 # MAIN GAME LOOP:
 
@@ -161,7 +167,14 @@ while True:
             # Spawning enemies;        
             if event.type == enemy_timer:
                 enemy_rect_list.append(choice(enemy_surf_list).get_rect(midbottom = (randrange(20, screen.get_width()-20), 0)))       
-        
+                
+            if event.type == spawn_increase_timer:
+                if enemy_spawn_rate <= 100:
+                    enemy_spawn_rate = 2000
+                    pygame.time.set_timer(enemy_timer, enemy_spawn_rate) 
+                else:
+                    enemy_spawn_rate -= 100
+                    pygame.time.set_timer(enemy_timer, enemy_spawn_rate)   
         else:
         
         # Start screen events:
@@ -172,6 +185,7 @@ while True:
                     enemy_rect_list = []
                     bolt_rect_list = []
                     player_rect.x = screen.get_width()/2 - player_surf.get_width()/2
+                    enemy_spawn_rate = 2000
                     game_active = True
                     game_started = True
    
