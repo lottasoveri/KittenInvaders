@@ -162,7 +162,7 @@ while True:
                 # Shoot bolts:
                 if event.key == pygame.K_SPACE:
                     bolt_rect_list.append(choice(bolt_surf_list).get_rect(midbottom = player_rect.midtop))
-                    game_score -= 5
+                    game_score -= 10
                 # Quit to start screen:
                 if event.key == pygame.K_q:
                     game_active = False
