@@ -1,5 +1,6 @@
 import pygame
 from random import randrange, choice
+from sys import exit
 
 # FUNCTIONS:
 
@@ -81,6 +82,7 @@ clock = pygame.time.Clock()
 
 font_title = pygame.font.Font("fonts/PixeloidSansBold-PKnYd.ttf", 50)
 font_regular = pygame.font.Font("fonts/PixeloidSans-mLxMm.ttf", 30)
+font_small = pygame.font.Font("fonts/PixeloidSans-mLxMm.ttf", 20)
 font_score = pygame.font.Font("fonts/PixeloidMono-d94EV.ttf", 20)
 
 game_active = False     # Switch between start screen and game
@@ -92,6 +94,12 @@ title_rect = title_surf.get_rect(midbottom = (screen.get_width()/2, screen.get_h
 
 game_over_surf = font_title.render("Game over!", False, (156, 156, 156))
 game_over_rect = game_over_surf.get_rect(midbottom = (screen.get_width()/2, screen.get_height()/3))
+
+instruct1_surf = font_small.render("Left-arrow & right-arrow to move", False, (156, 156, 156))
+instruct1_rect = instruct1_surf.get_rect(midtop = (screen.get_width()/2, screen.get_height()/3*1.4))
+
+instruct2_surf = font_small.render("Space to shoot", False, (156, 156, 156))
+instruct2_rect = instruct2_surf.get_rect(midtop = (screen.get_width()/2, screen.get_height()/3*1.6))
 
 info_surf = font_regular.render("Push Enter to play", False, (156, 156, 156))
 info_rect = info_surf.get_rect(midtop = (screen.get_width()/2, screen.get_height()/3*2))
@@ -135,6 +143,7 @@ left = False
 enemy_timer = pygame.USEREVENT + 1
 enemy_spawn_rate = 2000
 pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
+spawn_rate_decreaser = 200
 
 spawn_increase_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(spawn_increase_timer, 5000)
@@ -180,11 +189,16 @@ while True:
                 
             if event.type == spawn_increase_timer:
                 if enemy_spawn_rate <= 100:
-                    enemy_spawn_rate = 2000
-                    pygame.time.set_timer(enemy_timer, enemy_spawn_rate) 
+                    enemy_spawn_rate = (2000 - spawn_rate_decreaser)
+                    pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
+                    if spawn_rate_decreaser <= 1700:
+                        spawn_rate_decreaser += 200
+                    print(enemy_spawn_rate)
+                    print(spawn_rate_decreaser)    
                 else:
                     enemy_spawn_rate -= 100
-                    pygame.time.set_timer(enemy_timer, enemy_spawn_rate)   
+                    pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
+
         else:
         
         # Start screen events:
@@ -196,8 +210,11 @@ while True:
                     bolt_rect_list = []
                     player_rect.x = screen.get_width()/2 - player_surf.get_width()/2
                     enemy_spawn_rate = 2000
+                    spawn_rate_decreaser = 200
                     game_active = True
                     game_started = True
+                    print(enemy_spawn_rate)
+                    print(spawn_rate_decreaser)   
                     
             # Stop player movement, in case it got stuck when game ended:    
             if event.type == pygame.KEYUP:
@@ -249,6 +266,10 @@ while True:
             screen.blit(game_over_surf, game_over_rect)
         else:    
             screen.blit(title_surf, title_rect)
+        
+        # Instruction:
+        screen.blit(instruct1_surf, instruct1_rect)
+        screen.blit(instruct2_surf, instruct2_rect)
         
         # Info    
         screen.blit(info_surf, info_rect)  

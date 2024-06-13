@@ -1,2 +1,7 @@
 .venv/
 discarded/
+build/
+dist/
+
+kitteninvaders.spec
+issues.txt
