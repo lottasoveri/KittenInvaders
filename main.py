@@ -1,34 +1,35 @@
-import pygame
 from sys import exit
+import pygame
+import asyncio
 import setup
 from game import Game
 from kitties import Kitty
-    
-if __name__ == "__main__":
-    
-    pygame.init()
-    
-    # Game window:
-    screen_width = 1280
-    screen_height = 800
-    screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption("Kitten Invaders")
-    
-    # Game clock:
-    clock = pygame.time.Clock()
-    
-    # Current game instance:
-    game = Game(screen, screen_width, screen_height)
-    
-    # Background:
-    starfield_surf = pygame.Surface((screen_width, screen_height))
-    starfield_surf.fill((0, 0, 25))
-    setup.generate_starfield(starfield_surf, screen_width, screen_height - 50)
-    
-    # Ground surface:    
-    ground_surf = pygame.Surface((screen_width, 50))
-    ground_surf.fill((64, 64, 64))
-    ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
+ 
+pygame.init()
+
+# Game window:
+screen_width = 1280
+screen_height = 800
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Kitten Invaders")
+
+# Game clock:
+clock = pygame.time.Clock()
+
+# Current game instance:
+game = Game(screen, screen_width, screen_height)
+
+# Background:
+starfield_surf = pygame.Surface((screen_width, screen_height))
+starfield_surf.fill((0, 0, 25))
+setup.generate_starfield(starfield_surf, screen_width, screen_height - 50)
+
+# Ground surface:    
+ground_surf = pygame.Surface((screen_width, 50))
+ground_surf.fill((64, 64, 64))
+ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
+
+async def main():
     
     # Timers:
     enemy_timer = pygame.USEREVENT + 1
@@ -38,11 +39,11 @@ if __name__ == "__main__":
 
     spawn_increase_timer = pygame.USEREVENT + 2
     pygame.time.set_timer(spawn_increase_timer, 5000)
-    
+
     drop_timer = pygame.USEREVENT + 3
     drop_rate = 5000
     pygame.time.set_timer(drop_timer, drop_rate)
-    
+        
     game_running = False
     game_paused = False
 
@@ -107,3 +108,6 @@ if __name__ == "__main__":
             
         pygame.display.update()
         clock.tick(60)
+        await asyncio.sleep(0)
+            
+asyncio.run(main())
