@@ -27,6 +27,23 @@ class Game:
         # Kitties:
         self.kitties = pygame.sprite.Group()
         self.kitty_droppings = pygame.sprite.Group()
+        
+    def display_health(self):
+        health_x = 25
+        if self.health > 0:
+            for i in range(self.health - 1):
+                health_surf = pygame.image.load("images/heart1.png")
+                health_rect = health_surf.get_rect(midleft = (health_x, self.screen_height -25))
+                self.screen.blit(health_surf, health_rect)
+                health_x += 35
+                i += 1
+        if self.health < 4:
+            for i in range(3 - (self.health-1)):
+                health_surf = pygame.image.load("images/heart2.png")
+                health_rect = health_surf.get_rect(midleft = (health_x, self.screen_height -25))
+                self.screen.blit(health_surf, health_rect)
+                health_x += 35
+                i += 1
      
     def display_score(self):
         score_surf = self.font_score.render(f" Score: {self.score} ", False, (0, 0, 25))
@@ -88,4 +105,5 @@ class Game:
         self.kitties.draw(self.screen)
         self.player.sprite.bolts.draw(self.screen)
         self.kitty_droppings.draw(self.screen)
+        self.display_health()
         self.display_score()

@@ -13,3 +13,7 @@ Good luck, and good gaming!
 This game was developed by Lotta Soveri
 
 Main tutorials by YouTube user @ClearCode
+
+Pixeloid font from https://www.fontspace.com/pixeloid-font-f69232
+
+<a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Kiranshastry - Flaticon</a>
