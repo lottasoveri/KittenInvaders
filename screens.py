@@ -42,7 +42,7 @@ def display_hiscores(screen, screen_width, screen_height):
     title_surf = font_title.render("High scores", False, (156, 156, 156))
     title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/4))
     
-    main_screen_surf = font_small.render(" B - Back ", False, (0, 0, 25))
+    main_screen_surf = font_small.render(" M - Main menu ", False, (0, 0, 25))
     main_screen_rect = main_screen_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + 200))
     pygame.draw.rect(screen, (156, 156, 156), main_screen_rect)     
     
@@ -87,7 +87,7 @@ def display_settings(screen, screen_width, screen_height):
     msg2_3_rect = msg2_3_surf.get_rect(topleft = (screen_width/2 + 100, title_rect.bottom + 250))
     pygame.draw.rect(screen, (156, 156, 156), msg2_3_rect)
     
-    main_screen_surf = font_small.render(" B - Back ", False, (0, 0, 25))
+    main_screen_surf = font_small.render(" M - Main menu ", False, (0, 0, 25))
     main_screen_rect = main_screen_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + 350))
     pygame.draw.rect(screen, (156, 156, 156), main_screen_rect)
       
@@ -132,7 +132,7 @@ def display_help(screen, screen_width, screen_height):
     msg3_b_rect = msg3_b_surf.get_rect(topleft = (msg1_a_rect.left, title_rect.bottom + 250))
     pygame.draw.rect(screen, (156, 156, 156), msg3_b_rect)    
     
-    main_screen_surf = font_small.render(" B - Back ", False, (0, 0, 25))
+    main_screen_surf = font_small.render(" M - Main menu ", False, (0, 0, 25))
     main_screen_rect = main_screen_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + 350))
     pygame.draw.rect(screen, (156, 156, 156), main_screen_rect)
     

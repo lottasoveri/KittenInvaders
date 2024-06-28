@@ -4,8 +4,8 @@ from random import choice
 class Bolt(pygame.sprite.Sprite):
     def __init__(self, type, speed, coords, screen_height):
         super().__init__()
-        player_bolt = choice(["images/burger.png", "images/potatp.png"])
-        kitty_bolt = choice(["images/hairball.png", "images/poop.png"])
+        player_bolt = choice(["images/burger.png", "images/potato.png"])
+        kitty_bolt = choice(["images/hairball.png", "images/toy.png"])
         if type == "player":
             self.image = pygame.image.load(player_bolt).convert_alpha()
         else:

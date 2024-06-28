@@ -33,14 +33,14 @@ class Game:
         if self.health > 0:
             for i in range(self.health - 1):
                 health_surf = pygame.image.load("images/heart1.png")
-                health_rect = health_surf.get_rect(midleft = (health_x, self.screen_height -25))
+                health_rect = health_surf.get_rect(midleft = (health_x, self.screen_height - 25))
                 self.screen.blit(health_surf, health_rect)
                 health_x += 35
                 i += 1
         if self.health < 4:
             for i in range(3 - (self.health-1)):
                 health_surf = pygame.image.load("images/heart2.png")
-                health_rect = health_surf.get_rect(midleft = (health_x, self.screen_height -25))
+                health_rect = health_surf.get_rect(midleft = (health_x, self.screen_height - 25))
                 self.screen.blit(health_surf, health_rect)
                 health_x += 35
                 i += 1
@@ -51,6 +51,13 @@ class Game:
         pygame.draw.rect(self.screen, (156, 156, 156), score_rect)
         
         self.screen.blit(score_surf, score_rect)
+        
+    def display_pause(self):
+        pause_surf = self.font_score.render(" P - Pause ", False, (0, 0, 25))
+        pause_rect = pause_surf.get_rect(midright = (self.screen_width - 25, self.screen_height - 25))
+        pygame.draw.rect(self.screen, (156, 156, 156), pause_rect)
+        
+        self.screen.blit(pause_surf, pause_rect)        
         
     def kitty_drop(self):
         if self.kitties.sprites():
@@ -107,3 +114,4 @@ class Game:
         self.kitty_droppings.draw(self.screen)
         self.display_health()
         self.display_score()
+        self.display_pause()

@@ -1,8 +1,6 @@
 from sys import exit
-import pygame
-import asyncio
-import setup
-import screens
+import pygame, asyncio
+import setup, screens
 from game import Game
 from kitties import Kitty
  
@@ -75,13 +73,6 @@ async def main():
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                             game_running = True
 
-                    # B:
-                    if event.key == pygame.K_b:
-                        if not game_running:
-                            show_help = False
-                            show_settings = False
-                            show_hiscores = False
-
                     # H:
                     if event.key == pygame.K_h:
                         if not game_running:
@@ -95,6 +86,13 @@ async def main():
                             show_help = False
                             show_settings = False
                             show_hiscores = True
+
+                    # M:
+                    if event.key == pygame.K_m:
+                        if not game_running:
+                            show_help = False
+                            show_settings = False
+                            show_hiscores = False
 
                     # P:
                     if event.key == pygame.K_p:
@@ -139,13 +137,8 @@ async def main():
         screen.blit(starfield_surf, (0, 0))
         screen.blit(ground_surf, ground_rect)
 
-        # Game over:
-        if game.over:
-            game_running = False
-            screens.display_game_over(screen, screen_width, screen_height)
-            
         # Run game:
-        elif game_running and not game_paused:
+        if game_running and not game_paused and not game.over:
             game.run()
 
         # Game paused:
@@ -163,6 +156,12 @@ async def main():
         # Show settings:
         elif show_settings:
             screens.display_settings(screen, screen_width, screen_height)
+            
+        # Game over:
+        elif game.over:
+            game_running = False
+            screens.display_game_over(screen, screen_width, screen_height)
+            game.display_score()
 
         # Show start-screen:
         else:
