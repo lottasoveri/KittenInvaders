@@ -42,11 +42,16 @@ def display_hiscores(screen, screen_width, screen_height):
     title_surf = font_title.render("High scores", False, (156, 156, 156))
     title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/4))
     
+    subtitle_surf = font_regular.render(" Nothing here yet... ", False, (0, 0, 25))
+    subtitle_rect = subtitle_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + 75))
+    pygame.draw.rect(screen, (156, 156, 156), subtitle_rect)
+    
     main_screen_surf = font_small.render(" M - Main menu ", False, (0, 0, 25))
     main_screen_rect = main_screen_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + 200))
     pygame.draw.rect(screen, (156, 156, 156), main_screen_rect)     
     
     screen.blit(title_surf, title_rect)
+    screen.blit(subtitle_surf, subtitle_rect)
     screen.blit(main_screen_surf, main_screen_rect)
     
 # Settings screen:
@@ -152,7 +157,7 @@ def display_pause(screen, screen_width, screen_height):
     pause_rect = pause_surf.get_rect(midtop = (screen_width/2, screen_height/4))
     
     subtitle_surf = font_regular.render(" Push \"P\" to continue ", False, (0, 0, 25))
-    subtitle_rect = subtitle_surf.get_rect(midtop = (screen_width/2, pause_rect.bottom+100))
+    subtitle_rect = subtitle_surf.get_rect(midtop = (screen_width/2, pause_rect.bottom + 100))
     pygame.draw.rect(screen, (156, 156, 156), subtitle_rect)
     
     screen.blit(pause_surf, pause_rect)
@@ -165,7 +170,7 @@ def display_game_over(screen, screen_width, screen_height):
     title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/4))
     
     subtitle_surf = font_regular.render(" Push \"Enter\" to play again ", False, (0, 0, 25))
-    subtitle_rect = subtitle_surf.get_rect(midtop = (screen_width/2, title_rect.bottom+100))
+    subtitle_rect = subtitle_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + 100))
     pygame.draw.rect(screen, (156, 156, 156), subtitle_rect)        
     
     msg1_surf = font_small.render(" L - List high scores ", False, (0, 0, 25))

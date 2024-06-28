@@ -159,7 +159,9 @@ async def main():
         # Game paused:
         elif game_running and game_paused:
             screens.display_pause(screen, screen_width, screen_height)
-
+            game.display_health()
+            game.display_score()
+            
         # Show hi-scores:
         elif show_hiscores:
             screens.display_hiscores(screen, screen_width, screen_height)

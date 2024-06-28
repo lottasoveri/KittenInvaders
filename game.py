@@ -57,7 +57,7 @@ class Game:
         
         self.screen.blit(score_surf, score_rect)
         
-    def display_pause(self):
+    def display_pause_text(self):
         pause_surf = self.font_score.render(" P - Pause ", False, (0, 0, 25))
         pause_rect = pause_surf.get_rect(midright = (self.screen_width - 25, self.screen_height - 25))
         pygame.draw.rect(self.screen, (156, 156, 156), pause_rect)
@@ -119,4 +119,4 @@ class Game:
         self.kitty_droppings.draw(self.screen)
         self.display_health()
         self.display_score()
-        self.display_pause()
+        self.display_pause_text()
