@@ -63,27 +63,27 @@ def display_settings(screen, screen_width, screen_height):
     subtitle2_rect = subtitle2_surf.get_rect(topleft = (screen_width/2 + 100, title_rect.bottom + 75))
     pygame.draw.rect(screen, (156, 156, 156), subtitle2_rect)
     
-    msg1_1_surf = font_small.render(" A: move left ", False, (0, 0, 25))
+    msg1_1_surf = font_small.render(" l-arrow: move left ", False, (0, 0, 25))
     msg1_1_rect = msg1_1_surf.get_rect(topleft = (screen_width/4, title_rect.bottom + 150))
     pygame.draw.rect(screen, (156, 156, 156), msg1_1_rect)
 
-    msg1_2_surf = font_small.render(" D: move right ", False, (0, 0, 25))
+    msg1_2_surf = font_small.render(" r-arrow: move right ", False, (0, 0, 25))
     msg1_2_rect = msg1_2_surf.get_rect(topleft = (screen_width/4, title_rect.bottom + 200))
     pygame.draw.rect(screen, (156, 156, 156), msg1_2_rect)     
         
-    msg1_3_surf = font_small.render(" r-shift: shoot ", False, (0, 0, 25))
+    msg1_3_surf = font_small.render(" space: shoot ", False, (0, 0, 25))
     msg1_3_rect = msg1_3_surf.get_rect(topleft = (screen_width/4, title_rect.bottom + 250))
     pygame.draw.rect(screen, (156, 156, 156), msg1_3_rect)
     
-    msg2_1_surf = font_small.render(" l-arrow: move left ", False, (0, 0, 25))
+    msg2_1_surf = font_small.render(" A: move left ", False, (0, 0, 25))
     msg2_1_rect = msg2_1_surf.get_rect(topleft = (screen_width/2 + 100, title_rect.bottom + 150))
     pygame.draw.rect(screen, (156, 156, 156), msg2_1_rect)
 
-    msg2_2_surf = font_small.render(" r-arrow: move right ", False, (0, 0, 25))
+    msg2_2_surf = font_small.render(" D: move right ", False, (0, 0, 25))
     msg2_2_rect = msg2_2_surf.get_rect(topleft = (screen_width/2 + 100, title_rect.bottom + 200))
     pygame.draw.rect(screen, (156, 156, 156), msg2_2_rect)     
         
-    msg2_3_surf = font_small.render(" space: shoot ", False, (0, 0, 25))
+    msg2_3_surf = font_small.render(" r-shift: shoot ", False, (0, 0, 25))
     msg2_3_rect = msg2_3_surf.get_rect(topleft = (screen_width/2 + 100, title_rect.bottom + 250))
     pygame.draw.rect(screen, (156, 156, 156), msg2_3_rect)
     

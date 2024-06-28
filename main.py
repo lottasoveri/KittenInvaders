@@ -71,7 +71,22 @@ async def main():
                                 pygame.time.set_timer(spawn_timer, spawn_rate)
                                 pygame.time.set_timer(spawn_increase_timer, 5000)
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
+                            show_help = False
+                            show_settings = False
+                            show_hiscores = False                            
                             game_running = True
+
+                    # 1:
+                    if event.key == pygame.K_1 or event.key == pygame.K_KP_1:
+                        if show_settings:
+                            game.controls = 1
+                            game.update_controls()
+
+                    # 2:
+                    if event.key == pygame.K_2 or event.key == pygame.K_KP_2:
+                        if show_settings:
+                            game.controls = 2
+                            game.update_controls()
 
                     # H:
                     if event.key == pygame.K_h:
