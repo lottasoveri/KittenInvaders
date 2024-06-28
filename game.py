@@ -8,6 +8,7 @@ class Game:
         self.screen = screen
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.controls = 1
         
         # Fonts:
         self.font_title = pygame.font.Font("fonts/PixeloidSansBold-PKnYd.ttf", 50)
@@ -21,12 +22,16 @@ class Game:
         self.over = False
         
         # Player:
-        self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, 5)
+        self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, 5, self.controls)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
         # Kitties:
         self.kitties = pygame.sprite.Group()
         self.kitty_droppings = pygame.sprite.Group()
+        
+    def update_controls(self):
+        self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, 5, self.controls)
+        self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
     def display_health(self):
         health_x = 25
