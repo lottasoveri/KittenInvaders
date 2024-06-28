@@ -6,18 +6,20 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("images/cannon.png").convert_alpha()
         self.rect = self.image.get_rect(midbottom = coords)
-        self.speed = speed
         self.max_x = max_x
+        self.speed = speed
         self.loaded = True
         
         self.bolts = pygame.sprite.Group()
-        
+    
+    # User input:    
     def get_input(self):
         keys = pygame.key.get_pressed()
         
         if keys[pygame.K_LEFT]:
             if self.rect.left > 0:
                 self.rect.x -= self.speed
+                
         if keys[pygame.K_RIGHT]:
             if self.rect.right <= self.max_x:
                 self.rect.x += self.speed

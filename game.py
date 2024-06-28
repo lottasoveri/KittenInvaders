@@ -17,8 +17,8 @@ class Game:
         
         # Score & health:
         self.score = 0
-        self.health = 3
-        self.dead = False
+        self.health = 4
+        self.over = False
         
         # Player:
         self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, 5)
@@ -27,46 +27,13 @@ class Game:
         # Kitties:
         self.kitties = pygame.sprite.Group()
         self.kitty_droppings = pygame.sprite.Group()
-    
-    def display_start(self):
-        title_surf = self.font_title.render("Kitten Invaders", False, (156, 156, 156))
-        title_rect = title_surf.get_rect(midtop = (self.screen_width/2, self.screen_height/3))
-        
-        msg_surf = self.font_regular.render(" Push \"Enter\" to play ", False, (0, 0, 25))
-        msg_rect = msg_surf.get_rect(midtop = (self.screen_width/2, title_rect.bottom+100))
-        pygame.draw.rect(self.screen, (156, 156, 156), msg_rect)        
-        
-        self.screen.blit(title_surf, title_rect)
-        self.screen.blit(msg_surf, msg_rect)
-    
+     
     def display_score(self):
         score_surf = self.font_score.render(f" Score: {self.score} ", False, (0, 0, 25))
         score_rect = score_surf.get_rect(center = (self.screen_width/2, self.screen_height-25))
         pygame.draw.rect(self.screen, (156, 156, 156), score_rect)
         
         self.screen.blit(score_surf, score_rect)
-        
-    def display_pause(self):
-        pause_surf = self.font_title.render("Game paused", False, (156, 156, 156))
-        pause_rect = pause_surf.get_rect(midtop = (self.screen_width/2, self.screen_height/3))
-        
-        msg_surf = self.font_regular.render(" Push \"P\" to continue ", False, (0, 0, 25))
-        msg_rect = msg_surf.get_rect(midtop = (self.screen_width/2, pause_rect.bottom+100))
-        pygame.draw.rect(self.screen, (156, 156, 156), msg_rect)
-        
-        self.screen.blit(pause_surf, pause_rect)
-        self.screen.blit(msg_surf, msg_rect)
-        
-    def display_game_over(self):
-        title_surf = self.font_title.render("Game over!", False, (156, 156, 156))
-        title_rect = title_surf.get_rect(midtop = (self.screen_width/2, self.screen_height/3))
-        
-        msg_surf = self.font_regular.render(" Push \"Enter\" to play again ", False, (0, 0, 25))
-        msg_rect = msg_surf.get_rect(midtop = (self.screen_width/2, title_rect.bottom+100))
-        pygame.draw.rect(self.screen, (156, 156, 156), msg_rect)        
-        
-        self.screen.blit(title_surf, title_rect)
-        self.screen.blit(msg_surf, msg_rect)
         
     def kitty_drop(self):
         if self.kitties.sprites():
@@ -88,7 +55,7 @@ class Game:
                 if pygame.sprite.spritecollide(dropping, self.player, False):
                     self.health -= 1
                     if self.health <= 0:
-                        self.dead = True
+                        self.over = True
                     else:
                         dropping.kill()
                 if dropping.rect.bottom >= self.screen_height - 50:
@@ -98,21 +65,18 @@ class Game:
         if self.kitties:
             for kitty in self.kitties:
                 if pygame.sprite.spritecollide(kitty, self.player, False):
-                    self.dead = True
+                    self.over = True
                 if kitty.rect.bottom >= self.screen_height - 50:
-                    self.dead = True
-                    
+                    self.over = True
+                  
     def reset(self):
         self.score = 0
-        self.health = 3
-        self.dead = False
+        self.health = 4
+        self.over = False
         self.player_sprite.rect.x = self.screen_width/2 - 34
         pygame.sprite.Group.empty(self.kitties)
         pygame.sprite.Group.empty(self.kitty_droppings)
         pygame.sprite.Group.empty(self.player.sprite.bolts)
-                    
-    def start(self):
-        self.display_start()
 
     def run(self):
         self.player.update()
@@ -125,12 +89,3 @@ class Game:
         self.player.sprite.bolts.draw(self.screen)
         self.kitty_droppings.draw(self.screen)
         self.display_score()
-        
-    def pause(self):
-        self.display_pause()
-        self.display_score()
-        
-    def game_over(self):
-        self.display_game_over()
-        self.display_score()
-        

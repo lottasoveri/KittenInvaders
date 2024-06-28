@@ -2,6 +2,7 @@ from sys import exit
 import pygame
 import asyncio
 import setup
+import screens
 from game import Game
 from kitties import Kitty
  
@@ -32,82 +33,143 @@ ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
 async def main():
     
     # Timers:
-    enemy_timer = pygame.USEREVENT + 1
-    enemy_spawn_rate = 2000
-    pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
+    spawn_rate = 2000    
     spawn_rate_decreaser = 200
+    bomb_drop_rate = 5000
+        
+    spawn_timer = pygame.USEREVENT + 1
+    pygame.time.set_timer(spawn_timer, spawn_rate)
 
     spawn_increase_timer = pygame.USEREVENT + 2
     pygame.time.set_timer(spawn_increase_timer, 5000)
 
-    drop_timer = pygame.USEREVENT + 3
-    drop_rate = 5000
-    pygame.time.set_timer(drop_timer, drop_rate)
+    bomb_drop_timer = pygame.USEREVENT + 3
+    pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
         
     game_running = False
     game_paused = False
-
+    show_help = False
+    show_hiscores = False
+    show_settings = False
+    
     while True:
         
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 exit()
-                
+            
+            # Keyboard setup:    
             if event.type == pygame.KEYDOWN:
+                
+                    # Enter:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         if not game_running:
-                            if game.dead:
+                            if game.over:
                                 game.reset()
-                                
+                                spawn_rate = 2000
+                                spawn_rate_decreaser = 200
+                                bomb_drop_rate = 5000
+                                pygame.time.set_timer(spawn_timer, spawn_rate)
+                                pygame.time.set_timer(spawn_increase_timer, 5000)
+                                pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                             game_running = True
-                    
+
+                    # B:
+                    if event.key == pygame.K_b:
+                        if not game_running:
+                            show_help = False
+                            show_settings = False
+                            show_hiscores = False
+
+                    # H:
+                    if event.key == pygame.K_h:
+                        if not game_running:
+                            show_help = True
+                            show_settings = False
+                            show_hiscores = False
+
+                    # L:
+                    if event.key == pygame.K_l:
+                        if not game_running:
+                            show_help = False
+                            show_settings = False
+                            show_hiscores = True
+
+                    # P:
                     if event.key == pygame.K_p:
                         if game_running:
                             if game_paused:
                                 game_paused = False
                             else:
                                 game_paused = True
+
+                    # S:
+                    if event.key == pygame.K_s:
+                        if not game_running:
+                            show_help = False
+                            show_settings = True
+                            show_hiscores = False
                             
+            # Timers setup:                
             if game_running and not game_paused:
-                
-                if event.type == enemy_timer:
+
+                # Spawn enemy:
+                if event.type == spawn_timer:
                     game.kitties.add(Kitty(screen_width, screen_height))
-                    
+
+                # Increase enemy spawn rate:
                 if event.type == spawn_increase_timer:
-                    if enemy_spawn_rate <= 100:
-                        enemy_spawn_rate = (2000 - spawn_rate_decreaser)
-                        pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
+                    if spawn_rate <= 100:
+                        spawn_rate = (2000 - spawn_rate_decreaser)
+                        pygame.time.set_timer(spawn_timer, spawn_rate)
                         if spawn_rate_decreaser < 1800:
                             spawn_rate_decreaser += 200
-                        print(enemy_spawn_rate)
-                        print(spawn_rate_decreaser)    
+                        print(spawn_rate)               # TESTING
+                        print(spawn_rate_decreaser)     # TESTING
                     else:
-                        enemy_spawn_rate -= 100
-                        pygame.time.set_timer(enemy_timer, enemy_spawn_rate)
-                
-                if event.type == drop_timer:
+                        spawn_rate -= 100
+                        pygame.time.set_timer(spawn_timer, spawn_rate)
+
+                # Enemy projectile spawn:
+                if event.type == bomb_drop_timer:
                     game.kitty_drop()
-        
+
         # Draw background and ground:    
         screen.blit(starfield_surf, (0, 0))
         screen.blit(ground_surf, ground_rect)
-        
-        if game.dead:
+
+        # Game over:
+        if game.over:
             game_running = False
-            game.game_over()
-        
+            screens.display_game_over(screen, screen_width, screen_height)
+            
+        # Run game:
         elif game_running and not game_paused:
             game.run()
-            
-        elif game_running and game_paused:
-            game.pause()
 
+        # Game paused:
+        elif game_running and game_paused:
+            screens.display_pause(screen, screen_width, screen_height)
+
+        # Show hi-scores:
+        elif show_hiscores:
+            screens.display_hiscores(screen, screen_width, screen_height)
+
+        # Show help:
+        elif show_help:
+            screens.display_help(screen, screen_width, screen_height)
+
+        # Show settings:
+        elif show_settings:
+            screens.display_settings(screen, screen_width, screen_height)
+
+        # Show start-screen:
         else:
-            game.start()
-            
+            screens.display_start(screen, screen_width, screen_height)
+
         pygame.display.update()
         clock.tick(60)
         await asyncio.sleep(0)
-            
+  
 asyncio.run(main())
