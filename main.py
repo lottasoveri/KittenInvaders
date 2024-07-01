@@ -20,12 +20,12 @@ game = Game(screen, screen_width, screen_height)
 
 # Background:
 starfield_surf = pygame.Surface((screen_width, screen_height))
-starfield_surf.fill((0, 0, 25))
+starfield_surf.fill((0, 0, 51))
 setup.generate_starfield(starfield_surf, screen_width, screen_height - 50)
 
 # Ground surface:    
 ground_surf = pygame.Surface((screen_width, 50))
-ground_surf.fill((64, 64, 64))
+ground_surf.fill((51, 51, 51))
 ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
 
 async def main():
@@ -88,19 +88,19 @@ async def main():
                             game.controls = 2
                             game.update_controls()
 
+                    # G:
+                    if event.key == pygame.K_g:
+                        if not game_running:
+                            show_help = False
+                            show_settings = True
+                            show_hiscores = False
+                            
                     # H:
                     if event.key == pygame.K_h:
                         if not game_running:
                             show_help = True
                             show_settings = False
                             show_hiscores = False
-
-                    # L:
-                    if event.key == pygame.K_l:
-                        if not game_running:
-                            show_help = False
-                            show_settings = False
-                            show_hiscores = True
 
                     # M:
                     if event.key == pygame.K_m:
@@ -121,9 +121,9 @@ async def main():
                     if event.key == pygame.K_s:
                         if not game_running:
                             show_help = False
-                            show_settings = True
-                            show_hiscores = False
-                            
+                            show_settings = False
+                            show_hiscores = True
+
             # Timers setup:                
             if game_running and not game_paused:
 

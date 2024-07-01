@@ -12,8 +12,8 @@ Good luck, and good gaming!
 
 This game was designed and developed by Lotta Soveri
 
-- Main tutorials by YouTube user @ClearCode
+- Main tutorials by <a href="https://www.youtube.com/@ClearCode" target ="_blank">@ClearCode on YouTube</a>
 
-- Pixeloid font from https://www.fontspace.com/pixeloid-font-f69232
+- Pixeloid font from <a href="https://www.fontspace.com/pixeloid-font-f69232" target ="_blank">fontspace</a>
 
-- <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Kiranshastry - Flaticon</a>
+- Heart icons created by <a href="https://www.flaticon.com/free-icons/heart" title="heart icons" target ="_blank">Kiranshastry on Flaticon</a>

@@ -51,16 +51,16 @@ class Game:
                 i += 1
      
     def display_score(self):
-        score_surf = self.font_score.render(f" Score: {self.score} ", False, (0, 0, 25))
+        score_surf = self.font_score.render(f" Score: {self.score} ", False, (0, 0, 51))
         score_rect = score_surf.get_rect(center = (self.screen_width/2, self.screen_height-25))
-        pygame.draw.rect(self.screen, (156, 156, 156), score_rect)
+        pygame.draw.rect(self.screen, (204, 204, 204), score_rect)
         
         self.screen.blit(score_surf, score_rect)
         
     def display_pause_text(self):
-        pause_surf = self.font_score.render(" P - Pause ", False, (0, 0, 25))
+        pause_surf = self.font_score.render(" P - Pause ", False, (0, 0, 51))
         pause_rect = pause_surf.get_rect(midright = (self.screen_width - 25, self.screen_height - 25))
-        pygame.draw.rect(self.screen, (156, 156, 156), pause_rect)
+        pygame.draw.rect(self.screen, (204, 204, 204), pause_rect)
         
         self.screen.blit(pause_surf, pause_rect)        
         
