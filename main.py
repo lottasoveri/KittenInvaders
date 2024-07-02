@@ -7,8 +7,8 @@ from kitties import Kitty
 pygame.init()
 
 # Game window:
-screen_width = 1280
-screen_height = 800
+screen_width = 900
+screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Kitten Invaders")
 
@@ -48,7 +48,7 @@ async def main():
     game_paused = False
     show_help = False
     show_hiscores = False
-    show_settings = False
+    show_controls = False
     
     while True:
         
@@ -72,19 +72,19 @@ async def main():
                                 pygame.time.set_timer(spawn_increase_timer, 5000)
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                             show_help = False
-                            show_settings = False
+                            show_controls = False
                             show_hiscores = False                            
                             game_running = True
 
                     # 1:
                     if event.key == pygame.K_1 or event.key == pygame.K_KP_1:
-                        if show_settings:
+                        if show_controls:
                             game.controls = 1
                             game.update_controls()
 
                     # 2:
                     if event.key == pygame.K_2 or event.key == pygame.K_KP_2:
-                        if show_settings:
+                        if show_controls:
                             game.controls = 2
                             game.update_controls()
 
@@ -92,21 +92,21 @@ async def main():
                     if event.key == pygame.K_g:
                         if not game_running:
                             show_help = False
-                            show_settings = True
+                            show_controls = True
                             show_hiscores = False
                             
                     # H:
                     if event.key == pygame.K_h:
                         if not game_running:
                             show_help = True
-                            show_settings = False
+                            show_controls = False
                             show_hiscores = False
 
                     # M:
                     if event.key == pygame.K_m:
                         if not game_running:
                             show_help = False
-                            show_settings = False
+                            show_controls = False
                             show_hiscores = False
 
                     # P:
@@ -117,13 +117,18 @@ async def main():
                             else:
                                 game_paused = True
 
+                    # Q:
+                    if event.key == pygame.K_q:
+                        if not game_running:
+                            exit()
+
                     # S:
                     if event.key == pygame.K_s:
                         if not game_running:
                             show_help = False
-                            show_settings = False
+                            show_controls = False
                             show_hiscores = True
-
+                            
             # Timers setup:                
             if game_running and not game_paused:
 
@@ -171,8 +176,8 @@ async def main():
             screens.display_help(screen, screen_width, screen_height)
 
         # Show settings:
-        elif show_settings:
-            screens.display_settings(screen, screen_width, screen_height)
+        elif show_controls:
+            screens.display_controls(screen, screen_width, screen_height)
             
         # Game over:
         elif game.over:

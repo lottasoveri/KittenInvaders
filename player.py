@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[int(self.image_index)]
            
     def shoot(self):
-        self.bolts.add(Bolt("player", 5, self.rect.midtop, self.rect.bottom+50))
+        self.bolts.add(Bolt("player", 6, self.rect.midtop, self.rect.bottom+50))
                 
     def update(self):
         self.get_input()

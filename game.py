@@ -71,7 +71,7 @@ class Game:
     def kitty_drop(self):
         if self.kitties.sprites():
             random_kitty = choice(self.kitties.sprites())
-            dropping = Bolt("kitty", 5, random_kitty.rect.midbottom, self.screen_height)
+            dropping = Bolt("kitty", 4, random_kitty.rect.midbottom, self.screen_height)
             self.kitty_droppings.add(dropping)
             
     def check_collisions(self):
