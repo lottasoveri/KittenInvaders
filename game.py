@@ -49,6 +49,10 @@ class Game:
                 self.screen.blit(health_surf, health_rect)
                 health_x += 35
                 i += 1
+    
+    def animate_player(self):
+        if self.health <= 1:
+            self.player_sprite.player_animation()
      
     def display_score(self):
         score_surf = self.font_score.render(f" Score: {self.score} ", False, (0, 0, 51))
@@ -102,7 +106,9 @@ class Game:
         self.score = 0
         self.health = 4
         self.over = False
-        self.player_sprite.rect.x = self.screen_width/2 - 34
+        self.player_sprite.rect.x = self.screen_width/2 - 35
+        self.player_sprite.image_index = 0
+        self.player_sprite.image = self.player_sprite.images[int(self.player_sprite.image_index)]
         pygame.sprite.Group.empty(self.kitties)
         pygame.sprite.Group.empty(self.kitty_droppings)
         pygame.sprite.Group.empty(self.player.sprite.bolts)
@@ -112,7 +118,8 @@ class Game:
         self.kitties.update()
         self.kitty_droppings.update()
         self.check_collisions()
-        
+        self.animate_player()
+            
         self.player.draw(self.screen)
         self.kitties.draw(self.screen)
         self.player.sprite.bolts.draw(self.screen)
