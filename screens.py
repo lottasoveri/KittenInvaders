@@ -1,4 +1,5 @@
 import pygame
+from hiscores import read_hiscores
 
 pygame.font.init()
 
@@ -25,14 +26,14 @@ def display_menu(screen, screen_width, y_pos):
     help_rect = help_surf.get_rect(topleft = (hiscores_rect.left, controls_rect.bottom + line_spacing))
     pygame.draw.rect(screen, (204, 204, 204), help_rect)
     
-    quit_surf = font_small.render(" Q - Quit game ", False, (0, 0, 51))
-    quit_rect = quit_surf.get_rect(topleft = (hiscores_rect.left, help_rect.bottom + line_spacing))
-    pygame.draw.rect(screen, (204, 204, 204), quit_rect)        
+    # quit_surf = font_small.render(" Q - Quit game ", False, (0, 0, 51))
+    # quit_rect = quit_surf.get_rect(topleft = (hiscores_rect.left, help_rect.bottom + line_spacing))
+    # pygame.draw.rect(screen, (204, 204, 204), quit_rect)        
 
     screen.blit(hiscores_surf, hiscores_rect)
     screen.blit(controls_surf, controls_rect)
     screen.blit(help_surf, help_rect)
-    screen.blit(quit_surf, quit_rect)
+    # screen.blit(quit_surf, quit_rect)
 
 # Back to main screen -footer:    
 def display_back_to_main(screen, screen_width, y_pos):
@@ -63,13 +64,37 @@ def display_hiscores(screen, screen_width, screen_height):
     title_surf = font_title.render("High scores", False, (204, 204, 204))
     title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/5))
     
-    subtitle_surf = font_regular.render(" Nothing here yet... ", False, (0, 0, 51))
-    subtitle_rect = subtitle_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + line_spacing * 2))
-    pygame.draw.rect(screen, (204, 204, 204), subtitle_rect)
-    
     screen.blit(title_surf, title_rect)
-    screen.blit(subtitle_surf, subtitle_rect)
-    display_back_to_main(screen, screen_width, subtitle_rect.bottom + line_spacing * 2)
+    
+    high_scores = read_hiscores()
+    i = 0
+    
+    for entry in high_scores:
+        score = entry[0]
+        player = entry[1]
+        date = entry[2]
+        
+        score_surf = font_small.render(f" {str(score)} ", False, (0, 0, 51))
+        score_rect = score_surf.get_rect(topright = (screen_width/2 - 170, title_rect.bottom + line_spacing * (2+i)))
+        pygame.draw.rect(screen, (204, 204, 204), score_rect)
+        
+        player_surf = font_small.render(f" {player} ", False, (0, 0, 51))
+        player_rect = player_surf.get_rect(topleft = (screen_width/2 - 140, title_rect.bottom + line_spacing * (2+i)))
+        pygame.draw.rect(screen, (204, 204, 204), player_rect)
+        
+        date_surf = font_small.render(f" {date} ", False, (0, 0, 51))
+        date_rect = date_surf.get_rect(topleft = (screen_width/2 + 120, title_rect.bottom + line_spacing * (2+i)))
+        pygame.draw.rect(screen, (204, 204, 204), date_rect)
+        
+        screen.blit(score_surf, score_rect)
+        screen.blit(player_surf, player_rect)
+        screen.blit(date_surf, date_rect)
+        
+        i += 1
+        if i >= 10:
+            break
+
+    display_back_to_main(screen, screen_width, title_rect.bottom + line_spacing * (4+i))
     
 # Game controls screen:
 def display_controls(screen, screen_width, screen_height):
@@ -187,3 +212,16 @@ def display_game_over(screen, screen_width, screen_height):
     screen.blit(title_surf, title_rect)
     screen.blit(subtitle_surf, subtitle_rect)
     display_menu(screen, screen_width, subtitle_rect.bottom + line_spacing * 2)
+    
+# Add high score screen:    
+def display_add_highscore(screen, screen_width, screen_height):
+    
+    title_surf = font_title.render("New high score!", False, (204, 204, 204))
+    title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/5))
+    
+    msg_surf = font_small.render(" Add player name and push \"Enter\" ", False, (0, 0, 51))
+    msg_rect = msg_surf.get_rect(midtop = (screen_width/2, title_rect.bottom + line_spacing * 2))
+    pygame.draw.rect(screen, (204, 204, 204), msg_rect)
+    
+    screen.blit(title_surf, title_rect)
+    screen.blit(msg_surf, msg_rect)

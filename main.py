@@ -1,8 +1,9 @@
 from sys import exit
-import pygame, asyncio
-import setup, screens
+import pygame, asyncio, pygame_gui
+import setup, screens, hiscores
 from game import Game
 from kitties import Kitty
+from hiscores import check_highscore
  
 pygame.init()
 
@@ -14,6 +15,9 @@ pygame.display.set_caption("Kitten Invaders")
 
 # Game clock:
 clock = pygame.time.Clock()
+
+# GUI manager:
+manager = pygame_gui.UIManager((screen_width, screen_height))
 
 # Current game instance:
 game = Game(screen, screen_width, screen_height)
@@ -44,11 +48,19 @@ async def main():
     bomb_drop_timer = pygame.USEREVENT + 3
     pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
         
+    # Name input for high score
+    field_size_x = 100
+    field_size_y = 35
+    field_pos_x = screen_width/2 - field_size_x/2
+    field_pos_y = screen_height/2
+    player_input_field = pygame_gui.elements.UITextEntryLine(relative_rect = pygame.Rect(((field_pos_x, field_pos_y)), (field_size_x, field_size_y)), manager = manager, object_id = "#player_name_input")
+    
     game_running = False
     game_paused = False
     show_help = False
     show_hiscores = False
     show_controls = False
+    add_hiscore = False
     
     while True:
         
@@ -57,8 +69,19 @@ async def main():
             if event.type == pygame.QUIT:
                 exit()
             
+            # Getting player name for adding high score:
+            if add_hiscore:
+                manager.process_events(event)
+                
+                if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED and event.ui_object_id == "#player_name_input":
+                    hiscores.write_hiscores(event.text, game.score)
+                    add_hiscore = False
+                    show_hiscores = True
+                     
             # Keyboard setup:    
             if event.type == pygame.KEYDOWN:
+                
+                if not add_hiscore:
                 
                     # Enter:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
@@ -75,7 +98,7 @@ async def main():
                             show_controls = False
                             show_hiscores = False                            
                             game_running = True
-
+                            
                     # 1:
                     if event.key == pygame.K_1 or event.key == pygame.K_KP_1:
                         if show_controls:
@@ -118,9 +141,9 @@ async def main():
                                 game_paused = True
 
                     # Q:
-                    if event.key == pygame.K_q:
-                        if not game_running:
-                            exit()
+                    # if event.key == pygame.K_q:
+                    #     if not game_running:
+                    #         exit()
 
                     # S:
                     if event.key == pygame.K_s:
@@ -152,7 +175,7 @@ async def main():
                 # Enemy projectile spawn:
                 if event.type == bomb_drop_timer:
                     game.kitty_drop()
-
+                    
         # Draw background and ground:    
         screen.blit(starfield_surf, (0, 0))
         screen.blit(ground_surf, ground_rect)
@@ -182,9 +205,18 @@ async def main():
         # Game over:
         elif game.over:
             game_running = False
-            screens.display_game_over(screen, screen_width, screen_height)
-            game.display_score()
-
+            if check_highscore(game.score):
+                add_hiscore = True
+                manager.draw_ui(screen)
+                ui_refresh_rate = clock.tick(60)/500
+                manager.update(ui_refresh_rate)
+                screens.display_add_highscore(screen, screen_width, screen_height)
+                game.display_score()
+                
+            else:
+                screens.display_game_over(screen, screen_width, screen_height)
+                game.display_score()
+            
         # Show start-screen:
         else:
             screens.display_start(screen, screen_width, screen_height)
