@@ -7,7 +7,7 @@ today = date.today()
 # Read high scores from csv-file and return a list sorted by highest score:s
 def read_hiscores():
     high_scores = []
-    with open("hiscores.csv", newline = "") as document:
+    with open("hiscores.csv", newline = "", encoding = "utf8") as document:
         for row in csv.reader(document, delimiter = ";"):
             high_scores.append([int(row[0]), row[1], row[2]])
     return sorted(high_scores, reverse = True)
@@ -21,14 +21,14 @@ def write_hiscores(player_name, game_score):
         name = "Player"
     score = game_score
     date = today.strftime("%d %b %Y")
-    with open("hiscores.csv", "a", newline = "") as document:
+    with open("hiscores.csv", "a", newline = "", encoding = "utf8") as document:
         save_score = csv.writer(document, delimiter = ";")
         save_score.writerow([score, name, date])
 
 # Check if the new score is a high score:       
 def check_highscore(score):
     high_scores = []
-    with open("hiscores.csv", newline = "") as document:
+    with open("hiscores.csv", newline = "", encoding = "utf8") as document:
         for row in csv.reader(document, delimiter = ";"):
             high_scores.append(int(row[0]))
     high_scores.sort(reverse = True)

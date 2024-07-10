@@ -75,15 +75,15 @@ def display_hiscores(screen, screen_width, screen_height):
         date = entry[2]
         
         score_surf = font_small.render(f" {str(score)} ", False, (0, 0, 51))
-        score_rect = score_surf.get_rect(topright = (screen_width/2 - 170, title_rect.bottom + line_spacing * (2+i)))
+        score_rect = score_surf.get_rect(topright = (screen_width/2 - 180, title_rect.bottom + line_spacing * (2+i)))
         pygame.draw.rect(screen, (204, 204, 204), score_rect)
         
         player_surf = font_small.render(f" {player} ", False, (0, 0, 51))
-        player_rect = player_surf.get_rect(topleft = (screen_width/2 - 140, title_rect.bottom + line_spacing * (2+i)))
+        player_rect = player_surf.get_rect(topleft = (screen_width/2 - 150, title_rect.bottom + line_spacing * (2+i)))
         pygame.draw.rect(screen, (204, 204, 204), player_rect)
         
         date_surf = font_small.render(f" {date} ", False, (0, 0, 51))
-        date_rect = date_surf.get_rect(topleft = (screen_width/2 + 120, title_rect.bottom + line_spacing * (2+i)))
+        date_rect = date_surf.get_rect(topleft = (screen_width/2 + 150, title_rect.bottom + line_spacing * (2+i)))
         pygame.draw.rect(screen, (204, 204, 204), date_rect)
         
         screen.blit(score_surf, score_rect)

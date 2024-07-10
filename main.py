@@ -1,9 +1,10 @@
 from sys import exit
-import pygame, asyncio, pygame_gui
-import setup, screens, hiscores
+import pygame, asyncio
+import setup, screens
 from game import Game
 from kitties import Kitty
-from hiscores import check_highscore
+from input_field import InputField
+from hiscores import check_highscore, write_hiscores
  
 pygame.init()
 
@@ -15,9 +16,6 @@ pygame.display.set_caption("Kitten Invaders")
 
 # Game clock:
 clock = pygame.time.Clock()
-
-# GUI manager:
-manager = pygame_gui.UIManager((screen_width, screen_height))
 
 # Current game instance:
 game = Game(screen, screen_width, screen_height)
@@ -49,11 +47,7 @@ async def main():
     pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
         
     # Name input for high score
-    field_size_x = 100
-    field_size_y = 35
-    field_pos_x = screen_width/2 - field_size_x/2
-    field_pos_y = screen_height/2
-    player_input_field = pygame_gui.elements.UITextEntryLine(relative_rect = pygame.Rect(((field_pos_x, field_pos_y)), (field_size_x, field_size_y)), manager = manager, object_id = "#player_name_input")
+    name_input = InputField(250, 35, screen_width, screen_height)
     
     game_running = False
     game_paused = False
@@ -69,24 +63,29 @@ async def main():
             if event.type == pygame.QUIT:
                 exit()
             
-            # Getting player name for adding high score:
+            # Add high score screen:    
             if add_hiscore:
-                manager.process_events(event)
                 
-                if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED and event.ui_object_id == "#player_name_input":
-                    hiscores.write_hiscores(event.text, game.score)
-                    add_hiscore = False
-                    show_hiscores = True
-                     
-            # Keyboard setup:    
-            if event.type == pygame.KEYDOWN:
+                # Player input:
+                name_input.handle_events(event)
+                                          
+                # Keyboard setup:    
+                if event.type == pygame.KEYDOWN:
+
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                        write_hiscores(name_input.text.strip(), game.score)
+                        name_input.clear()
+                        add_hiscore = False
+                        show_hiscores = True
+
+            else:
                 
-                if not add_hiscore:
-                
+                if event.type == pygame.KEYDOWN:
+            
                     # Enter:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         if not game_running:
-                            if game.over:
+                            if game.over:                         
                                 game.reset()
                                 spawn_rate = 2000
                                 spawn_rate_decreaser = 200
@@ -207,12 +206,9 @@ async def main():
             game_running = False
             if check_highscore(game.score):
                 add_hiscore = True
-                manager.draw_ui(screen)
-                ui_refresh_rate = clock.tick(60)/500
-                manager.update(ui_refresh_rate)
                 screens.display_add_highscore(screen, screen_width, screen_height)
+                name_input.draw(screen)
                 game.display_score()
-                
             else:
                 screens.display_game_over(screen, screen_width, screen_height)
                 game.display_score()
