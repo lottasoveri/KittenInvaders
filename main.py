@@ -30,22 +30,30 @@ ground_surf = pygame.Surface((screen_width, 50))
 ground_surf.fill((51, 51, 51))
 ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
 
+# Music:
+pygame.mixer.music.load("sounds/level-ix-medium.ogg")
+pygame.mixer.music.play(-1)
+
 async def main():
     
     # Timers:
-    spawn_rate = 2000    
+    
+    ## Spawn timer:
+    spawn_rate = 2000
     spawn_rate_decreaser = 200
-    bomb_drop_rate = 5000
-        
     spawn_timer = pygame.USEREVENT + 1
     pygame.time.set_timer(spawn_timer, spawn_rate)
 
+    ## Spawn rate increase timer:
+    spawn_increase_rate = 5000
     spawn_increase_timer = pygame.USEREVENT + 2
-    pygame.time.set_timer(spawn_increase_timer, 5000)
-
+    pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
+    
+    ## Invader bomb timer:    
+    bomb_drop_rate = 5000
     bomb_drop_timer = pygame.USEREVENT + 3
     pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
-        
+             
     # Name input for high score
     name_input = InputField(250, 35, screen_width, screen_height)
     
@@ -66,10 +74,10 @@ async def main():
             # Add high score screen:    
             if add_hiscore:
                 
-                # Player input:
+                ## Player input:
                 name_input.handle_events(event)
                                           
-                # Keyboard setup:    
+                ## Keyboard setup:    
                 if event.type == pygame.KEYDOWN:
 
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
@@ -89,9 +97,8 @@ async def main():
                                 game.reset()
                                 spawn_rate = 2000
                                 spawn_rate_decreaser = 200
-                                bomb_drop_rate = 5000
                                 pygame.time.set_timer(spawn_timer, spawn_rate)
-                                pygame.time.set_timer(spawn_increase_timer, 5000)
+                                pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                             show_help = False
                             show_controls = False
@@ -149,8 +156,13 @@ async def main():
                     if event.key == pygame.K_p:
                         if game_running:
                             if game_paused:
+                                spawn_rate = spawn_rate_on_pause
+                                spawn_rate_decreaser = spawn_rate_decreaser_on_pause
+                                pygame.time.set_timer(spawn_timer, spawn_rate)
                                 game_paused = False
                             else:
+                                spawn_rate_on_pause = spawn_rate
+                                spawn_rate_decreaser_on_pause = spawn_rate_decreaser
                                 game_paused = True
 
                     # Q:
@@ -165,14 +177,14 @@ async def main():
                             show_controls = False
                             show_hiscores = True
                             
-            # Timers setup:                
+            # Timers action:                
             if game_running and not game_paused:
 
-                # Spawn enemy:
+                ## Spawn enemy:
                 if event.type == spawn_timer:
                     game.kitties.add(Kitty(screen_width, screen_height))
 
-                # Increase enemy spawn rate:
+                ## Increase enemy spawn rate:
                 if event.type == spawn_increase_timer:
                     if spawn_rate <= 100:
                         spawn_rate = (2000 - spawn_rate_decreaser)

@@ -10,12 +10,16 @@ class Player(pygame.sprite.Sprite):
         self.image_index = 0
         self.image = self.images[int(self.image_index)]
         self.rect = self.image.get_rect(midbottom = coords)
+        
         self.coords = coords
         self.max_x = max_x
         self.speed = speed
-        self.controls = controls
-        self.loaded = True
         
+        self.controls = controls
+        
+        self.shoot_sound = pygame.mixer.Sound("sounds/bottle-pop.ogg")
+        
+        self.loaded = True
         self.bolts = pygame.sprite.Group()
     
     # User input:    
@@ -57,6 +61,7 @@ class Player(pygame.sprite.Sprite):
            
     def shoot(self):
         self.bolts.add(Bolt("player", 6, self.rect.midtop, self.rect.bottom+50))
+        self.shoot_sound.play()
                 
     def update(self):
         self.get_input()

@@ -12,8 +12,14 @@ Good luck, and good gaming!
 
 This game was designed and developed by Lotta Soveri
 
-- Main tutorials by <a href="https://www.youtube.com/@ClearCode" target ="_blank">@ClearCode on YouTube</a>
+- Main tutorials by <a href="https://www.youtube.com/@ClearCode" target="_blank">@ClearCode on YouTube</a>
 
-- Pixeloid font from <a href="https://www.fontspace.com/pixeloid-font-f69232" target ="_blank">fontspace</a>
+- High score player name input field idea from <a href="https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame">Stackoverflow</a>
 
-- Heart icons created by <a href="https://www.flaticon.com/free-icons/heart" title="heart icons" target ="_blank">Kiranshastry on Flaticon</a>
+- Pixeloid font from <a href="https://www.fontspace.com/pixeloid-font-f69232" target="_blank">fontspace</a>
+
+- Heart icons created by <a href="https://www.flaticon.com/free-icons/heart" title="heart icons" target="_blank">Kiranshastry on Flaticon</a>
+
+- Sound Effects from <a href="https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=49592" target="_blank">Pixabay</a>
+
+- Music by <a href="https://pixabay.com/fi/users/moodmode-33139253/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=211053">Vlad Krotov</a> from <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=211053">Pixabay</a>

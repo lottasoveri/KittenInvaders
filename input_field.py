@@ -1,7 +1,5 @@
 import pygame
 
-# https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
-
 pygame.font.init()
 
 color_inactive = pygame.Color((128, 128, 128))

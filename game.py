@@ -22,12 +22,17 @@ class Game:
         self.over = False
         
         # Player:
-        self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, 5, self.controls)
+        self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, 7, self.controls)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
         # Kitties:
         self.kitties = pygame.sprite.Group()
         self.kitty_droppings = pygame.sprite.Group()
+        
+        # Sounds:
+        self.kitty_hit_sound = pygame.mixer.Sound("sounds/gulp.ogg")
+        self.player_hit_sound = pygame.mixer.Sound("sounds/uh-oh.ogg")
+        self.game_over_sound = pygame.mixer.Sound("sounds/game-over-arcade-6435.ogg")
         
     def update_controls(self):
         self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, 5, self.controls)
@@ -79,6 +84,7 @@ class Game:
         if self.player.sprite.bolts:
             for bolt in self.player.sprite.bolts:
                 if pygame.sprite.spritecollide(bolt, self.kitties, True):
+                    self.kitty_hit_sound.play()
                     bolt.kill()
                     self.score += 100
                     
@@ -88,8 +94,10 @@ class Game:
                 if pygame.sprite.spritecollide(dropping, self.player, False):
                     self.health -= 1
                     if self.health <= 0:
+                        self.game_over_sound.play()
                         self.over = True
                     else:
+                        self.player_hit_sound.play()
                         dropping.kill()
                 if dropping.rect.bottom >= self.screen_height - 50:
                     dropping.kill()
@@ -98,8 +106,10 @@ class Game:
         if self.kitties:
             for kitty in self.kitties:
                 if pygame.sprite.spritecollide(kitty, self.player, False):
+                    self.game_over_sound.play()
                     self.over = True
                 if kitty.rect.bottom >= self.screen_height - 50:
+                    self.game_over_sound.play()
                     self.over = True
                   
     def reset(self):
@@ -127,3 +137,4 @@ class Game:
         self.display_health()
         self.display_score()
         self.display_pause_text()
+        
