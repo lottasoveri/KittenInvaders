@@ -174,7 +174,7 @@ async def main():
                 # Enemy projectile spawn:
                 if event.type == bomb_drop_timer:
                     game.kitty_drop()
-                    
+                  
         # Draw background and ground:    
         screen.blit(starfield_surf, (0, 0))
         screen.blit(ground_surf, ground_rect)
@@ -200,6 +200,14 @@ async def main():
         # Show settings:
         elif show_controls:
             screens.display_controls(screen, screen_width, screen_height)
+            y_pos = 219
+            width = 223
+            height = 44
+            if game.controls == 1:
+                chosen = pygame.rect.Rect(screen_width/4 - 53, y_pos, width, height)
+            elif game.controls == 2:
+                chosen = pygame.rect.Rect(screen_width/2 + 47, y_pos, width, height)
+            pygame.draw.rect(screen, (0, 255, 255), chosen, 2)
             
         # Game over:
         elif game.over:

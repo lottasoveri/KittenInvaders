@@ -146,7 +146,7 @@ def display_controls(screen, screen_width, screen_height):
     screen.blit(msg2_2_surf, msg2_2_rect)
     screen.blit(msg2_3_surf, msg2_3_rect)
     display_back_to_main(screen, screen_width, msg1_3_rect.bottom + line_spacing * 2)
-    
+
 # Help screen:
 def display_help(screen, screen_width, screen_height):
     
