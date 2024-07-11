@@ -98,6 +98,20 @@ async def main():
                             show_hiscores = False                            
                             game_running = True
                             
+                    # Right-shift:
+                    if event.key == pygame.K_RSHIFT:
+                        if game_running and not game_paused:
+                            if game.controls == 2:
+                                if game.score > 0:
+                                    game.score -= 10
+                            
+                    # Space:
+                    if event.key == pygame.K_SPACE:
+                        if game_running and not game_paused:
+                            if game.controls == 1:
+                                if game.score > 0:
+                                    game.score -= 10
+                            
                     # 1:
                     if event.key == pygame.K_1 or event.key == pygame.K_KP_1:
                         if show_controls:
