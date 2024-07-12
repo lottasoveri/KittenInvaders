@@ -41,10 +41,10 @@ def display_menu(screen, screen_width, y_pos):
     screen.blit(help_surf, help_rect)
     # screen.blit(quit_surf, quit_rect)
 
-# Back to main screen -footer:    
+# Footer menu:    
 def display_footer_menu(screen, screen_height):
     y_pos = screen_height - 35
-    x_sep = 20
+    x_sep = 13
     
     main_screen_surf = font_footer.render(" M - Main menu ", False, (0, 0, 51))
     main_screen_rect = main_screen_surf.get_rect(topleft = (x_sep, y_pos))
