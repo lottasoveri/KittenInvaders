@@ -8,6 +8,7 @@ font_title = pygame.font.Font("fonts/PixeloidSansBold-PKnYd.ttf", 50)
 font_regular = pygame.font.Font("fonts/PixeloidSans-mLxMm.ttf", 30)
 font_small = pygame.font.Font("fonts/PixeloidSans-mLxMm.ttf", 20)
 font_score = pygame.font.Font("fonts/PixeloidMono-d94EV.ttf", 20)
+font_footer = pygame.font.Font("fonts/PixeloidSans-mLxMm.ttf", 16)
 
 line_spacing = 20
 
@@ -41,13 +42,35 @@ def display_menu(screen, screen_width, y_pos):
     # screen.blit(quit_surf, quit_rect)
 
 # Back to main screen -footer:    
-def display_back_to_main(screen, screen_width, y_pos):
+def display_footer_menu(screen, screen_height):
+    y_pos = screen_height - 35
+    x_sep = 20
     
-    main_screen_surf = font_small.render(" M - Main menu ", False, (0, 0, 51))
-    main_screen_rect = main_screen_surf.get_rect(midtop = (screen_width/2, y_pos))
-    pygame.draw.rect(screen, (204, 204, 204), main_screen_rect)     
+    main_screen_surf = font_footer.render(" M - Main menu ", False, (0, 0, 51))
+    main_screen_rect = main_screen_surf.get_rect(topleft = (x_sep, y_pos))
+    pygame.draw.rect(screen, (204, 204, 204), main_screen_rect)
     
+    hiscores_surf = font_footer.render(" S - High scores ", False, (0, 0, 51))
+    hiscores_rect = hiscores_surf.get_rect(topleft = (main_screen_rect.right + x_sep, y_pos))
+    pygame.draw.rect(screen, (204, 204, 204), hiscores_rect)
+
+    controls_surf = font_footer.render(" G - Game controls ", False, (0, 0, 51))
+    controls_rect = controls_surf.get_rect(topleft = (hiscores_rect.right + x_sep, y_pos))
+    pygame.draw.rect(screen, (204, 204, 204), controls_rect)
+
+    sound_surf = font_footer.render(" U - Music and sounds ", False, (0, 0, 51))
+    sound_rect = sound_surf.get_rect(topleft = (controls_rect.right + x_sep, y_pos))
+    pygame.draw.rect(screen, (204, 204, 204), sound_rect)
+
+    help_surf = font_footer.render(" H - How to play ", False, (0, 0, 51))
+    help_rect = help_surf.get_rect(topleft = (sound_rect.right + x_sep, y_pos))
+    pygame.draw.rect(screen, (204, 204, 204), help_rect)
+
     screen.blit(main_screen_surf, main_screen_rect)  
+    screen.blit(hiscores_surf, hiscores_rect)
+    screen.blit(controls_surf, controls_rect)
+    screen.blit(sound_surf, sound_rect)
+    screen.blit(help_surf, help_rect)
 
 # Start screen:
 def display_start(screen, screen_width, screen_height):
@@ -99,7 +122,7 @@ def display_hiscores(screen, screen_width, screen_height):
         if i >= 10:
             break
 
-    display_back_to_main(screen, screen_width, title_rect.bottom + line_spacing * (4+i))
+    display_footer_menu(screen, screen_height)
     
 # Game controls screen:
 def display_controls(screen, screen_width, screen_height):
@@ -150,12 +173,12 @@ def display_controls(screen, screen_width, screen_height):
     screen.blit(msg2_1_surf, msg2_1_rect)
     screen.blit(msg2_2_surf, msg2_2_rect)
     screen.blit(msg2_3_surf, msg2_3_rect)
-    display_back_to_main(screen, screen_width, msg1_3_rect.bottom + line_spacing * 2)
+    display_footer_menu(screen, screen_height)
 
 # Music and sound control screen:
 def display_sounds(screen, screen_width, screen_height):
     
-    title_surf = font_title.render("Music and sound effects", False, (204, 204, 204))
+    title_surf = font_title.render("Music and sounds", False, (204, 204, 204))
     title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/5))
     
     # Music:
@@ -191,7 +214,7 @@ def display_sounds(screen, screen_width, screen_height):
     screen.blit(subtitle_sounds_surf, subtitle_sounds_rect)
     screen.blit(sound_on_surf, sound_on_rect)
     screen.blit(sound_off_surf, sound_off_rect)
-    display_back_to_main(screen, screen_width, music_off_rect.bottom + line_spacing * 2)
+    display_footer_menu(screen, screen_height)
 
 # Help screen:
 def display_help(screen, screen_width, screen_height):
@@ -223,6 +246,14 @@ def display_help(screen, screen_width, screen_height):
     msg3_b_rect = msg3_b_surf.get_rect(topleft = (msg1_a_rect.left, msg3_a_rect.bottom))
     pygame.draw.rect(screen, (204, 204, 204), msg3_b_rect)    
     
+    msg4_a_surf = font_small.render(" +100 points per kitty fed ", False, (0, 0, 51))
+    msg4_a_rect = msg4_a_surf.get_rect(topleft = (msg1_a_rect.left, msg3_b_rect.bottom + line_spacing))
+    pygame.draw.rect(screen, (204, 204, 204), msg4_a_rect)    
+    
+    msg4_b_surf = font_small.render(" -10 points per shot fired ", False, (0, 0, 51))
+    msg4_b_rect = msg4_b_surf.get_rect(topleft = (msg1_a_rect.left, msg4_a_rect.bottom))
+    pygame.draw.rect(screen, (204, 204, 204), msg4_b_rect)    
+    
     screen.blit(title_surf, title_rect)
     screen.blit(msg1_a_surf, msg1_a_rect)
     screen.blit(msg1_b_surf, msg1_b_rect)
@@ -230,7 +261,9 @@ def display_help(screen, screen_width, screen_height):
     screen.blit(msg2_b_surf, msg2_b_rect)
     screen.blit(msg3_a_surf, msg3_a_rect)
     screen.blit(msg3_b_surf, msg3_b_rect)
-    display_back_to_main(screen, screen_width, msg3_b_rect.bottom + line_spacing * 2)
+    screen.blit(msg4_a_surf, msg4_a_rect)
+    screen.blit(msg4_b_surf, msg4_b_rect)
+    display_footer_menu(screen, screen_height)
 
 # Pause screen
 def display_pause(screen, screen_width, screen_height):

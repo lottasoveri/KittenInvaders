@@ -32,7 +32,7 @@ ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
 
 # Music:
 pygame.mixer.music.load("sounds/level-ix-medium.ogg")
-pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.set_volume(0.2)
 pygame.mixer.music.play(-1)
 
 # Sounds:
@@ -183,7 +183,7 @@ async def main():
                                 spawn_rate_decreaser_on_pause = spawn_rate_decreaser
                                 game_paused = True
 
-                    # Q (disabled for deployment on itch.io):
+                    # Q (disabled for deployment on itch.io, in screens also):
                     # if event.key == pygame.K_q:
                     #     if not game_running:
                     #         exit()
