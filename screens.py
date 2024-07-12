@@ -14,7 +14,7 @@ line_spacing = 20
 # Menu for start and game over screens:
 def display_menu(screen, screen_width, y_pos):
     
-    hiscores_surf = font_small.render(" S - Show high scores ", False, (0, 0, 51))
+    hiscores_surf = font_small.render(" S - High scores ", False, (0, 0, 51))
     hiscores_rect = hiscores_surf.get_rect(midtop = (screen_width/2, y_pos))
     pygame.draw.rect(screen, (204, 204, 204), hiscores_rect)        
 
@@ -22,8 +22,12 @@ def display_menu(screen, screen_width, y_pos):
     controls_rect = controls_surf.get_rect(topleft = (hiscores_rect.left, hiscores_rect.bottom + line_spacing))
     pygame.draw.rect(screen, (204, 204, 204), controls_rect)        
 
+    sound_surf = font_small.render(" U - Music and sounds ", False, (0, 0, 51))
+    sound_rect = sound_surf.get_rect(topleft = (hiscores_rect.left, controls_rect.bottom + line_spacing))
+    pygame.draw.rect(screen, (204, 204, 204), sound_rect)        
+
     help_surf = font_small.render(" H - How to play ", False, (0, 0, 51))
-    help_rect = help_surf.get_rect(topleft = (hiscores_rect.left, controls_rect.bottom + line_spacing))
+    help_rect = help_surf.get_rect(topleft = (hiscores_rect.left, sound_rect.bottom + line_spacing))
     pygame.draw.rect(screen, (204, 204, 204), help_rect)
     
     # quit_surf = font_small.render(" Q - Quit game ", False, (0, 0, 51))
@@ -32,6 +36,7 @@ def display_menu(screen, screen_width, y_pos):
 
     screen.blit(hiscores_surf, hiscores_rect)
     screen.blit(controls_surf, controls_rect)
+    screen.blit(sound_surf, sound_rect)
     screen.blit(help_surf, help_rect)
     # screen.blit(quit_surf, quit_rect)
 
@@ -146,6 +151,47 @@ def display_controls(screen, screen_width, screen_height):
     screen.blit(msg2_2_surf, msg2_2_rect)
     screen.blit(msg2_3_surf, msg2_3_rect)
     display_back_to_main(screen, screen_width, msg1_3_rect.bottom + line_spacing * 2)
+
+# Music and sound control screen:
+def display_sounds(screen, screen_width, screen_height):
+    
+    title_surf = font_title.render("Music and sound effects", False, (204, 204, 204))
+    title_rect = title_surf.get_rect(midtop = (screen_width/2, screen_height/5))
+    
+    # Music:
+    subtitle_music_surf = font_regular.render(" Music: ", False, (0, 0, 51))
+    subtitle_music_rect = subtitle_music_surf.get_rect(topleft = (screen_width/4 - 50, title_rect.bottom + line_spacing * 2))
+    pygame.draw.rect(screen, (204, 204, 204), subtitle_music_rect)
+    
+    music_on_surf = font_small.render(" Z - Music ON ", False, (0, 0, 51))
+    music_on_rect = music_on_surf.get_rect(topleft = (screen_width/4 - 50, subtitle_music_rect.bottom + line_spacing * 2))
+    pygame.draw.rect(screen, (204, 204, 204), music_on_rect)
+
+    music_off_surf = font_small.render(" Z - Music OFF ", False, (0, 0, 51))
+    music_off_rect = music_off_surf.get_rect(topleft = (screen_width/4 - 50, music_on_rect.bottom + line_spacing))
+    pygame.draw.rect(screen, (204, 204, 204), music_off_rect)     
+  
+    # Sound effects:
+    subtitle_sounds_surf = font_regular.render(" Sound effects: ", False, (0, 0, 51))
+    subtitle_sounds_rect = subtitle_sounds_surf.get_rect(topleft = (screen_width/2 + 50, title_rect.bottom + line_spacing * 2))
+    pygame.draw.rect(screen, (204, 204, 204), subtitle_sounds_rect)
+    
+    sound_on_surf = font_small.render(" X - Sound effects ON ", False, (0, 0, 51))
+    sound_on_rect = sound_on_surf.get_rect(topleft = (screen_width/2 + 50, subtitle_music_rect.bottom + line_spacing * 2))
+    pygame.draw.rect(screen, (204, 204, 204), sound_on_rect)
+
+    sound_off_surf = font_small.render(" X - Sound effects OFF ", False, (0, 0, 51))
+    sound_off_rect = sound_off_surf.get_rect(topleft = (screen_width/2 + 50, sound_on_rect.bottom + line_spacing))
+    pygame.draw.rect(screen, (204, 204, 204), sound_off_rect)     
+    
+    screen.blit(title_surf, title_rect)
+    screen.blit(subtitle_music_surf, subtitle_music_rect)
+    screen.blit(music_on_surf, music_on_rect)
+    screen.blit(music_off_surf, music_off_rect)
+    screen.blit(subtitle_sounds_surf, subtitle_sounds_rect)
+    screen.blit(sound_on_surf, sound_on_rect)
+    screen.blit(sound_off_surf, sound_off_rect)
+    display_back_to_main(screen, screen_width, music_off_rect.bottom + line_spacing * 2)
 
 # Help screen:
 def display_help(screen, screen_width, screen_height):

@@ -31,10 +31,17 @@ class Game:
         
         # Sounds:
         self.kitty_hit_sound = pygame.mixer.Sound("sounds/gulp.ogg")
+        self.kitty_hit_sound.set_volume(0.4)
         self.player_hit_sound = pygame.mixer.Sound("sounds/uh-oh.ogg")
+        self.player_hit_sound.set_volume(0.7)
         self.game_over_sound = pygame.mixer.Sound("sounds/game-over-arcade-6435.ogg")
+        self.sound_on = True
         
     def update_controls(self):
+        self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, 5, self.controls)
+        self.player = pygame.sprite.GroupSingle(self.player_sprite)
+        
+    def update_player_sounds(self):
         self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, 5, self.controls)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
@@ -84,7 +91,8 @@ class Game:
         if self.player.sprite.bolts:
             for bolt in self.player.sprite.bolts:
                 if pygame.sprite.spritecollide(bolt, self.kitties, True):
-                    self.kitty_hit_sound.play()
+                    if self.sound_on:
+                        self.kitty_hit_sound.play()
                     bolt.kill()
                     self.score += 100
                     
@@ -94,10 +102,12 @@ class Game:
                 if pygame.sprite.spritecollide(dropping, self.player, False):
                     self.health -= 1
                     if self.health <= 0:
-                        self.game_over_sound.play()
+                        if self.sound_on:
+                            self.game_over_sound.play()
                         self.over = True
                     else:
-                        self.player_hit_sound.play()
+                        if self.sound_on:
+                            self.player_hit_sound.play()
                         dropping.kill()
                 if dropping.rect.bottom >= self.screen_height - 50:
                     dropping.kill()
@@ -106,10 +116,12 @@ class Game:
         if self.kitties:
             for kitty in self.kitties:
                 if pygame.sprite.spritecollide(kitty, self.player, False):
-                    self.game_over_sound.play()
+                    if self.sound_on:
+                        self.game_over_sound.play()
                     self.over = True
                 if kitty.rect.bottom >= self.screen_height - 50:
-                    self.game_over_sound.play()
+                    if self.sound_on:
+                        self.game_over_sound.play()
                     self.over = True
                   
     def reset(self):

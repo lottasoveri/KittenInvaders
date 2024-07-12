@@ -4,6 +4,7 @@ from ammo import Bolt
 class Player(pygame.sprite.Sprite):
     def __init__(self, coords, max_x, speed, controls):
         super().__init__()
+        # Player image:
         image_1 = pygame.image.load("images/cannon1.png").convert_alpha()
         image_2 = pygame.image.load("images/cannon2.png").convert_alpha()
         self.images = [image_1, image_2]
@@ -11,18 +12,19 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[int(self.image_index)]
         self.rect = self.image.get_rect(midbottom = coords)
         
+        # Movement:
         self.coords = coords
         self.max_x = max_x
         self.speed = speed
         
+        # Controls:
         self.controls = controls
         
-        self.shoot_sound = pygame.mixer.Sound("sounds/bottle-pop.ogg")
-        
+        # Shooting:
         self.loaded = True
         self.bolts = pygame.sprite.Group()
     
-    # User input:    
+    # User input:
     def get_input(self):
         keys = pygame.key.get_pressed()
         
@@ -61,7 +63,6 @@ class Player(pygame.sprite.Sprite):
            
     def shoot(self):
         self.bolts.add(Bolt("player", 6, self.rect.midtop, self.rect.bottom+50))
-        self.shoot_sound.play()
                 
     def update(self):
         self.get_input()

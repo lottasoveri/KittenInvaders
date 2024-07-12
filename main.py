@@ -32,7 +32,12 @@ ground_rect = ground_surf.get_rect(bottomleft = (0, screen_height))
 
 # Music:
 pygame.mixer.music.load("sounds/level-ix-medium.ogg")
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.play(-1)
+
+# Sounds:
+shoot_sound = pygame.mixer.Sound("sounds/bottle-pop.ogg")
+shoot_sound.set_volume(0.8)
 
 async def main():
     
@@ -59,9 +64,14 @@ async def main():
     
     game_running = False
     game_paused = False
+    
+    music_on = True
+    sound_on = True
+    
     show_help = False
     show_hiscores = False
     show_controls = False
+    show_sounds = False
     add_hiscore = False
     
     while True:
@@ -102,13 +112,16 @@ async def main():
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                             show_help = False
                             show_controls = False
-                            show_hiscores = False                            
+                            show_hiscores = False
+                            show_sounds = False   
                             game_running = True
                             
                     # Right-shift:
                     if event.key == pygame.K_RSHIFT:
                         if game_running and not game_paused:
                             if game.controls == 2:
+                                if sound_on:
+                                    shoot_sound.play()
                                 if game.score > 0:
                                     game.score -= 10
                             
@@ -116,6 +129,8 @@ async def main():
                     if event.key == pygame.K_SPACE:
                         if game_running and not game_paused:
                             if game.controls == 1:
+                                if sound_on:
+                                    shoot_sound.play()
                                 if game.score > 0:
                                     game.score -= 10
                             
@@ -136,6 +151,7 @@ async def main():
                         if not game_running:
                             show_help = False
                             show_controls = True
+                            show_sounds = False
                             show_hiscores = False
                             
                     # H:
@@ -143,6 +159,7 @@ async def main():
                         if not game_running:
                             show_help = True
                             show_controls = False
+                            show_sounds = False
                             show_hiscores = False
 
                     # M:
@@ -150,6 +167,7 @@ async def main():
                         if not game_running:
                             show_help = False
                             show_controls = False
+                            show_sounds = False
                             show_hiscores = False
 
                     # P:
@@ -165,7 +183,7 @@ async def main():
                                 spawn_rate_decreaser_on_pause = spawn_rate_decreaser
                                 game_paused = True
 
-                    # Q:
+                    # Q (disabled for deployment on itch.io):
                     # if event.key == pygame.K_q:
                     #     if not game_running:
                     #         exit()
@@ -175,8 +193,35 @@ async def main():
                         if not game_running:
                             show_help = False
                             show_controls = False
+                            show_sounds = False
                             show_hiscores = True
                             
+                    # U:
+                    if event.key == pygame.K_u:
+                        if not game_running:
+                            show_help = False
+                            show_controls = False
+                            show_sounds = True
+                            show_hiscores = False
+
+                    # X:
+                    if event.key == pygame.K_x:
+                        if show_sounds:
+                            sound_on = not sound_on
+                            if sound_on:
+                                game.sound_on = True
+                            else:
+                                game.sound_on = False
+                                
+                    # Z:
+                    if event.key == pygame.K_z:
+                        if show_sounds:
+                            music_on = not music_on
+                            if music_on:
+                                pygame.mixer.music.play(-1)
+                            else:
+                                pygame.mixer.music.stop()
+                                
             # Timers action:                
             if game_running and not game_paused:
 
@@ -223,17 +268,44 @@ async def main():
         elif show_help:
             screens.display_help(screen, screen_width, screen_height)
 
-        # Show settings:
+        # Show control settings:
         elif show_controls:
             screens.display_controls(screen, screen_width, screen_height)
-            y_pos = 219
-            width = 223
-            height = 44
+            cont_y = 219
+            cont_width = 223
+            cont_height = 44
             if game.controls == 1:
-                chosen = pygame.rect.Rect(screen_width/4 - 53, y_pos, width, height)
+                chosen = pygame.rect.Rect(screen_width/4 - 53, cont_y, cont_width, cont_height)
             elif game.controls == 2:
-                chosen = pygame.rect.Rect(screen_width/2 + 47, y_pos, width, height)
+                chosen = pygame.rect.Rect(screen_width/2 + 47, cont_y, cont_width, cont_height)
             pygame.draw.rect(screen, (0, 255, 255), chosen, 2)
+            
+        # Show sound settings:
+        elif show_sounds:
+            screens.display_sounds(screen, screen_width, screen_height)
+            
+            y_on = 297
+            y_off = 342
+            sndset_height = 31
+            
+            ## Music:
+            music_x = screen_width/4 - 53
+            if music_on:
+                music_chosen = pygame.rect.Rect(music_x, y_on, 152, sndset_height)
+            else:
+                music_chosen = pygame.rect.Rect(music_x, y_off, 163, sndset_height)
+            pygame.draw.rect(screen, (0, 255, 255), music_chosen, 2)
+            
+            ## Sound FX:
+            sound_x = screen_width/2 + 47
+            sound_width = 250
+            if sound_on:
+                sound_chosen = pygame.rect.Rect(sound_x, y_on, 242, sndset_height)
+            else:
+                sound_chosen = pygame.rect.Rect(sound_x, y_off, 253, sndset_height)
+            pygame.draw.rect(screen, (0, 255, 255), sound_chosen, 2)
+            
+            
             
         # Game over:
         elif game.over:
