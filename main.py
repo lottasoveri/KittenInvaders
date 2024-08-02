@@ -44,8 +44,9 @@ async def main():
     # Timers:
     
     ## Spawn timer:
-    spawn_rate = 2000
-    spawn_rate_decreaser = 200
+    spawn_rate_initial = 2000
+    spawn_rate_decreaser = 0
+    spawn_rate = spawn_rate_initial - spawn_rate_decreaser
     spawn_timer = pygame.USEREVENT + 1
     pygame.time.set_timer(spawn_timer, spawn_rate)
 
@@ -53,6 +54,12 @@ async def main():
     spawn_increase_rate = 5000
     spawn_increase_timer = pygame.USEREVENT + 2
     pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
+    
+    ## End game timer:
+    endgame_duration_initial = 10000
+    endgame_duration_increaser = 0
+    endgame_duration = endgame_duration_initial + endgame_duration_increaser
+    endgame_timer = pygame.USEREVENT + 4
     
     ## Invader bomb timer:    
     bomb_drop_rate = 5000
@@ -105,16 +112,19 @@ async def main():
                         if not game_running:
                             if game.over:                         
                                 game.reset()
-                                spawn_rate = 2000
-                                spawn_rate_decreaser = 200
+                                spawn_rate_decreaser = 0
+                                spawn_rate = spawn_rate_initial - spawn_rate_decreaser
                                 pygame.time.set_timer(spawn_timer, spawn_rate)
                                 pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
+                                endgame_duration_increaser = 0
+                                endgame_duration = endgame_duration_initial + endgame_duration_increaser
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                             show_help = False
                             show_controls = False
                             show_hiscores = False
                             show_sounds = False   
                             game_running = True
+                            print(f"Spawn rate: {spawn_rate}")                         # TESTING
                             
                     # Right-shift:
                     if event.key == pygame.K_RSHIFT:
@@ -232,16 +242,28 @@ async def main():
                 ## Increase enemy spawn rate:
                 if event.type == spawn_increase_timer:
                     if spawn_rate <= 100:
-                        spawn_rate = (2000 - spawn_rate_decreaser)
-                        pygame.time.set_timer(spawn_timer, spawn_rate)
                         if spawn_rate_decreaser < 1800:
                             spawn_rate_decreaser += 200
-                        print(spawn_rate)               # TESTING
-                        print(spawn_rate_decreaser)     # TESTING
+                            spawn_rate = spawn_rate_initial - spawn_rate_decreaser
+                            pygame.time.set_timer(spawn_timer, spawn_rate)
+                        else:
+                            endgame_duration = endgame_duration_initial + endgame_duration_increaser
+                            pygame.time.set_timer(spawn_increase_timer, endgame_duration + 1000)
+                            pygame.time.set_timer(endgame_timer, endgame_duration, loops = 1)
+                            print(f"End game duration: {endgame_duration}")
+                        print(f"Spawn rate: {spawn_rate}")                      # TESTING
                     else:
                         spawn_rate -= 100
                         pygame.time.set_timer(spawn_timer, spawn_rate)
-
+                
+                ## End game:
+                if event.type == endgame_timer:
+                    spawn_rate_decreaser = 200
+                    spawn_rate = spawn_rate_initial - spawn_rate_decreaser
+                    pygame.time.set_timer(spawn_timer, spawn_rate)
+                    pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
+                    endgame_duration_increaser += 10000
+                    
                 # Enemy projectile spawn:
                 if event.type == bomb_drop_timer:
                     game.kitty_drop()
