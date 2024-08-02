@@ -22,7 +22,7 @@ class Game:
         self.over = False
         
         # Player:
-        self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, 7, self.controls)
+        self.player_sprite = Player((screen_width/2, screen_height-50), screen_width, self.controls)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
         # Kitties:
@@ -38,11 +38,11 @@ class Game:
         self.sound_on = True
         
     def update_controls(self):
-        self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, 5, self.controls)
+        self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, self.controls)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
     def update_player_sounds(self):
-        self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, 5, self.controls)
+        self.player_sprite = Player((self.screen_width/2, self.screen_height-50), self.screen_width, self.controls)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         
     def display_health(self):
@@ -83,7 +83,7 @@ class Game:
     def kitty_drop(self):
         if self.kitties.sprites():
             random_kitty = choice(self.kitties.sprites())
-            dropping = Bolt("kitty", 4, random_kitty.rect.midbottom, self.screen_height)
+            dropping = Bolt("kitty", random_kitty.rect.midbottom, self.screen_height)
             self.kitty_droppings.add(dropping)
             
     def check_collisions(self):
@@ -128,7 +128,7 @@ class Game:
         self.score = 0
         self.health = 4
         self.over = False
-        self.player_sprite.rect.x = self.screen_width/2 - 35
+        self.player_sprite.rect.x = self.screen_width/2 - 25
         self.player_sprite.image_index = 0
         self.player_sprite.image = self.player_sprite.images[int(self.player_sprite.image_index)]
         pygame.sprite.Group.empty(self.kitties)

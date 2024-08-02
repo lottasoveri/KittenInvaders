@@ -303,9 +303,7 @@ async def main():
                 sound_chosen = pygame.rect.Rect(sound_x, y_on, 242, sndset_height)
             else:
                 sound_chosen = pygame.rect.Rect(sound_x, y_off, 253, sndset_height)
-            pygame.draw.rect(screen, (0, 255, 255), sound_chosen, 2)
-            
-            
+            pygame.draw.rect(screen, (0, 255, 255), sound_chosen, 2)         
             
         # Game over:
         elif game.over:

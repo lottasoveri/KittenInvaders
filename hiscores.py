@@ -34,11 +34,3 @@ def check_highscore(score):
     high_scores.sort(reverse = True)
     if len(high_scores) == 0 or score > high_scores[0]:
         return True
-    
-if __name__ == "__main__":
-
-    # scores = read_hiscores()
-    print(check_highscore(400))
-    
-    # for score in scores:
-    #     print(score)

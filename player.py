@@ -2,7 +2,7 @@ import pygame
 from ammo import Bolt
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, coords, max_x, speed, controls):
+    def __init__(self, coords, max_x, controls):
         super().__init__()
         # Player image:
         image_1 = pygame.image.load("images/cannon1.png").convert_alpha()
@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
         # Movement:
         self.coords = coords
         self.max_x = max_x
-        self.speed = speed
+        self.speed = 7
         
         # Controls:
         self.controls = controls
@@ -62,7 +62,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[int(self.image_index)]
            
     def shoot(self):
-        self.bolts.add(Bolt("player", 6, self.rect.midtop, self.rect.bottom+50))
+        self.bolts.add(Bolt("player", self.rect.midtop, self.rect.bottom+50))
                 
     def update(self):
         self.get_input()
