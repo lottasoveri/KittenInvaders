@@ -44,8 +44,9 @@ async def main():
     # Timers:
     
     ## Spawn timer:
-    spawn_rate = 2000
-    spawn_rate_decreaser = 200
+    spawn_rate_initial = 2000
+    spawn_rate_decreaser = 0
+    spawn_rate = spawn_rate_initial - spawn_rate_decreaser
     spawn_timer = pygame.USEREVENT + 1
     pygame.time.set_timer(spawn_timer, spawn_rate)
 
@@ -105,8 +106,8 @@ async def main():
                         if not game_running:
                             if game.over:                         
                                 game.reset()
-                                spawn_rate = 2000
-                                spawn_rate_decreaser = 200
+                                spawn_rate_decreaser = 0
+                                spawn_rate = spawn_rate_initial - spawn_rate_decreaser
                                 pygame.time.set_timer(spawn_timer, spawn_rate)
                                 pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
                                 pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
@@ -115,6 +116,7 @@ async def main():
                             show_hiscores = False
                             show_sounds = False   
                             game_running = True
+                            print(f"Spawn rate: {spawn_rate}")  # TESTING
                             
                     # Right-shift:
                     if event.key == pygame.K_RSHIFT:
@@ -232,12 +234,11 @@ async def main():
                 ## Increase enemy spawn rate:
                 if event.type == spawn_increase_timer:
                     if spawn_rate <= 100:
-                        spawn_rate = (2000 - spawn_rate_decreaser)
-                        pygame.time.set_timer(spawn_timer, spawn_rate)
                         if spawn_rate_decreaser < 1800:
                             spawn_rate_decreaser += 200
-                        print(spawn_rate)               # TESTING
-                        print(spawn_rate_decreaser)     # TESTING
+                        spawn_rate = spawn_rate_initial - spawn_rate_decreaser
+                        pygame.time.set_timer(spawn_timer, spawn_rate)
+                        print(f"Spawn rate: {spawn_rate}")  # TESTING
                     else:
                         spawn_rate -= 100
                         pygame.time.set_timer(spawn_timer, spawn_rate)
