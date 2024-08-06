@@ -39,41 +39,48 @@ pygame.mixer.music.play(-1)
 shoot_sound = pygame.mixer.Sound("sounds/bottle-pop.ogg")
 shoot_sound.set_volume(0.8)
 
+# Async func needed for pygame
 async def main():
     
-    # Timers:
+    # TIMERS:
     
-    ## Spawn timer:
+    ## Enemy/kitty spawn timer:
     spawn_rate_initial = 2000
     spawn_rate_decreaser = 0
     spawn_rate = spawn_rate_initial - spawn_rate_decreaser
     spawn_timer = pygame.USEREVENT + 1
-    pygame.time.set_timer(spawn_timer, spawn_rate)
 
     ## Spawn rate increase timer:
     spawn_increase_rate = 5000
     spawn_increase_timer = pygame.USEREVENT + 2
-    pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
     
-    ## Invader bomb timer:    
-    bomb_drop_rate = 5000
+    ## Enemy/kitty bomb timer:    
+    bomb_drop_rate_initial = 5000
+    bomb_drop_rate_decreaser = 0
+    bomb_drop_rate = bomb_drop_rate_initial - bomb_drop_rate_decreaser
     bomb_drop_timer = pygame.USEREVENT + 3
-    pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
              
-    # Name input for high score
+    # Name input field for high score:
     name_input = InputField(250, 35, screen_width, screen_height)
     
+    # SWITCHES:
+    
+    ## Game state swithces:
     game_running = False
     game_paused = False
     
+    ## Music and sound effect switches:
     music_on = True
     sound_on = True
     
+    ## Game screen switches:
     show_help = False
     show_hiscores = False
     show_controls = False
     show_sounds = False
     add_hiscore = False
+    
+    # GAME LOOP:
     
     while True:
         
@@ -85,7 +92,7 @@ async def main():
             # Add high score screen:    
             if add_hiscore:
                 
-                ## Player input:
+                ## Player name input field:
                 name_input.handle_events(event)
                                           
                 ## Keyboard setup:    
@@ -104,19 +111,27 @@ async def main():
                     # Enter:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         if not game_running:
+                            
                             if game.over:                         
                                 game.reset()
                                 spawn_rate_decreaser = 0
                                 spawn_rate = spawn_rate_initial - spawn_rate_decreaser
-                                pygame.time.set_timer(spawn_timer, spawn_rate)
-                                pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
-                                pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
+                                bomb_drop_rate_decreaser = 0
+                                bomb_drop_rate = bomb_drop_rate_initial - bomb_drop_rate_decreaser
+                                
+                            pygame.time.set_timer(spawn_timer, spawn_rate)
+                            pygame.time.set_timer(spawn_increase_timer, spawn_increase_rate)
+                            pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
+                            
                             show_help = False
                             show_controls = False
                             show_hiscores = False
                             show_sounds = False   
                             game_running = True
-                            print(f"Spawn rate: {spawn_rate}")  # TESTING
+                            
+                            # TESTING:
+                            print(f"Spawn rate: {spawn_rate}")
+                            print(f"Bomb drop rate: {bomb_drop_rate}")
                             
                     # Right-shift:
                     if event.key == pygame.K_RSHIFT:
@@ -176,16 +191,23 @@ async def main():
                     if event.key == pygame.K_p:
                         if game_running:
                             if game_paused:
+                                '''Loads saved timer values, sets timers and unpauses game'''
                                 spawn_rate = spawn_rate_on_pause
                                 spawn_rate_decreaser = spawn_rate_decreaser_on_pause
                                 pygame.time.set_timer(spawn_timer, spawn_rate)
+                                bomb_drop_rate = bomb_drop_rate_on_pause
+                                bomb_drop_rate_decreaser = bomb_drop_rate_decreaser_on_pause
+                                pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                                 game_paused = False
                             else:
+                                '''Saves timer values and pauses game'''
                                 spawn_rate_on_pause = spawn_rate
                                 spawn_rate_decreaser_on_pause = spawn_rate_decreaser
+                                bomb_drop_rate_on_pause = bomb_drop_rate
+                                bomb_drop_rate_decreaser_on_pause = bomb_drop_rate_decreaser
                                 game_paused = True
 
-                    # Q (disabled for deployment on itch.io, in screens also):
+                    # Q (disabled for deployment on itch.io; in screens.py also):
                     # if event.key == pygame.K_q:
                     #     if not game_running:
                     #         exit()
@@ -227,23 +249,44 @@ async def main():
             # Timers action:                
             if game_running and not game_paused:
 
-                ## Spawn enemy:
+                ## Enemy spawn timer:
+                '''Adds a kitty sprite to the kitty sprite group.'''
                 if event.type == spawn_timer:
                     game.kitties.add(Kitty(screen_width, screen_height))
 
-                ## Increase enemy spawn rate:
+                ## Enemy spawn increase timer:
+                '''Decreases enemy spawn time by 100 ms.'''
+                '''If enemy spawn rate is down to 100 ms, it's reset, 
+                starting a new attack wave. At the same time 200 ms is 
+                added to the spawn rate decreaser, starting each wave 
+                off with more enemies, making the game successively harder.'''
+                '''Once the decreaser is up to 1800 ms, enemy spawning is 
+                reset to initial values, starting a new series of attack 
+                waves. At this time, the time between enemy bombs is decreased 
+                by 1000 ms, making the game a bit more challenging.'''
+                '''Timers are set with their new values.'''
                 if event.type == spawn_increase_timer:
                     if spawn_rate <= 100:
                         if spawn_rate_decreaser < 1800:
                             spawn_rate_decreaser += 200
+                        else:
+                            spawn_rate_decreaser = 0
+                            if bomb_drop_rate > 1000:
+                                bomb_drop_rate_decreaser += 1000
+                                bomb_drop_rate = bomb_drop_rate_initial - bomb_drop_rate_decreaser
+                                pygame.time.set_timer(bomb_drop_timer, bomb_drop_rate)
                         spawn_rate = spawn_rate_initial - spawn_rate_decreaser
-                        pygame.time.set_timer(spawn_timer, spawn_rate)
-                        print(f"Spawn rate: {spawn_rate}")  # TESTING
+                        
+                        # TESTING:
+                        print(f"Spawn rate: {spawn_rate}")
+                        print(f"Bomb drop rate: {bomb_drop_rate}")
+                        
                     else:
                         spawn_rate -= 100
-                        pygame.time.set_timer(spawn_timer, spawn_rate)
+                    pygame.time.set_timer(spawn_timer, spawn_rate)
 
                 # Enemy projectile spawn:
+                '''Makes a random kitty drop a bomb'''
                 if event.type == bomb_drop_timer:
                     game.kitty_drop()
                   
@@ -257,6 +300,7 @@ async def main():
 
         # Game paused:
         elif game_running and game_paused:
+            '''Displays pause screen, player health bar and game score.'''
             screens.display_pause(screen, screen_width, screen_height)
             game.display_health()
             game.display_score()
@@ -271,6 +315,8 @@ async def main():
 
         # Show control settings:
         elif show_controls:
+            '''Displays control settings, and draws a rectangle around 
+            the selected setting.'''
             screens.display_controls(screen, screen_width, screen_height)
             cont_y = 219
             cont_width = 223
@@ -283,6 +329,8 @@ async def main():
             
         # Show sound settings:
         elif show_sounds:
+            '''Displays music and sound settings, and draws rectangles 
+            around the selected choices.'''
             screens.display_sounds(screen, screen_width, screen_height)
             
             y_on = 297
@@ -299,7 +347,6 @@ async def main():
             
             ## Sound FX:
             sound_x = screen_width/2 + 47
-            sound_width = 250
             if sound_on:
                 sound_chosen = pygame.rect.Rect(sound_x, y_on, 242, sndset_height)
             else:
